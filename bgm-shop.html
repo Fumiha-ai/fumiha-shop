@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEONOTE BGM SHOP — Suno制作BGM販売</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #4A6CF7;
+    --accent-light: #EEF1FE;
+    --bg: #F7F8FC;
+    --bg2: #FFFFFF;
+    --border: #E4E7F0;
+    --text: #1A1C2A;
+    --muted: #6B7080;
+    --radius: 14px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── Header ── */
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 60px 40px 0;
+    text-align: center;
+  }
+
+  .logo-badge {
+    display: inline-block;
+    background: var(--accent-light);
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
+  .logo-badge-inner {
+    padding: 5px 18px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  h1 {
+    font-family: 'Dela Gothic One', sans-serif;
+    font-size: clamp(36px, 7vw, 72px);
+    line-height: 1.0;
+    color: var(--text);
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 520px;
+    margin: 0 auto 48px;
+  }
+
+  /* ── Genre Filter ── */
+  .filter-bar {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0 20px 40px;
+  }
+
+  .filter-btn {
+    border: 1.5px solid var(--border);
+    border-radius: 999px;
+    padding: 7px 18px;
+    font-size: 13px;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    font-weight: 700;
+    background: var(--bg2);
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* ── Grid ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+    padding: 0 40px 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ── Jacket ── */
+  .card-jacket {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    background: var(--jacket-color, #2a2d3e);
+  }
+  .card-jacket img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  .card:hover .card-jacket img {
+    transform: scale(1.04);
+  }
+  /* 画像なし時のプレースホルダー */
+  .card-jacket .jacket-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 52px;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  /* img 読み込み成功時はプレースホルダーを隠す */
+  .card-jacket img.loaded + .jacket-placeholder {
+    display: none;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--accent);
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+
+  /* 一品物 — オレンジ */
+  .card[data-type="one-of-a-kind"] {
+    border-color: #FFB74D;
+    background: #FFFAF4;
+  }
+  .card[data-type="one-of-a-kind"]::before {
+    background: linear-gradient(90deg, #C25F00, #FFB74D);
+  }
+  .card[data-type="one-of-a-kind"]:hover {
+    box-shadow: 0 12px 32px rgba(194,95,0,0.15);
+  }
+
+  /* 通常 — ブルー */
+  .card[data-type="regular"] {
+    border-color: #C5CEFB;
+    background: #F5F7FF;
+  }
+  .card[data-type="regular"]::before {
+    background: linear-gradient(90deg, #4A6CF7, #8FA5FF);
+  }
+  .card[data-type="regular"]:hover {
+    box-shadow: 0 12px 32px rgba(74,108,247,0.15);
+  }
+
+  /* フリー — グリーン */
+  .card[data-type="free"] {
+    border-color: #9DE3BF;
+    background: #F3FBF7;
+  }
+  .card[data-type="free"]::before {
+    background: linear-gradient(90deg, #1A7A47, #56C987);
+  }
+  .card[data-type="free"]:hover {
+    box-shadow: 0 12px 32px rgba(26,122,71,0.15);
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(74,108,247,0.1);
+  }
+
+  .card.hidden { display: none; }
+
+  /* Tag */
+  .card-tag {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+    background: var(--accent-light);
+    color: var(--accent);
+  }
+
+  .card-title {
+    font-family: 'Dela Gothic One', sans-serif;
+    font-size: 20px;
+    line-height: 1.2;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .card-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 18px;
+    line-height: 1.6;
+  }
+
+  /* Waveform viz (dummy) */
+  .waveform {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    height: 36px;
+    margin-bottom: 16px;
+    cursor: pointer;
+  }
+  .wave-bar {
+    flex: 1;
+    border-radius: 3px;
+    background: var(--border);
+    transition: background 0.15s, height 0.15s;
+  }
+
+  /* Player row */
+  .player-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .play-btn {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.15s, opacity 0.15s;
+    font-size: 14px;
+  }
+  .play-btn:hover { transform: scale(1.1); opacity: 0.9; }
+
+  .player-info { flex: 1; }
+  .player-time { font-size: 11px; color: var(--muted); }
+
+  /* Volume control */
+  .volume-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 18px;
+  }
+  .volume-icon {
+    font-size: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+    user-select: none;
+    width: 20px;
+    text-align: center;
+  }
+  .volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 1;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+  }
+  .volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .volume-slider::-webkit-slider-thumb:hover { transform: scale(1.3); }
+  .volume-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: none;
+  }
+  .volume-num {
+    font-size: 11px;
+    color: var(--muted);
+    width: 28px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  audio { display: none; }
+
+  /* License pills */
+  .license-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .lic-pill {
+    font-size: 11px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 2px 10px;
+  }
+
+  /* Price + Buy */
+  .buy-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .price {
+    font-family: 'Dela Gothic One', sans-serif;
+    font-size: 26px;
+    line-height: 1;
+  }
+  .price span { font-size: 14px; font-family: 'Noto Sans JP', sans-serif; color: var(--muted); }
+
+  .buy-btn {
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: none;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+  .buy-btn:hover { opacity: 0.85; transform: scale(1.03); }
+
+  /* ── Stats bar ── */
+  .stats-bar {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 36px 40px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 52px;
+    background: var(--bg2);
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Dela Gothic One', sans-serif;
+    font-size: 34px;
+    color: var(--accent);
+  }
+  .stat-label { font-size: 12px; color: var(--muted); letter-spacing: 1px; }
+
+  /* ── License section ── */
+  .section {
+    max-width: 640px;
+    margin: 0 auto 80px;
+    padding: 0 40px;
+  }
+  .section-title {
+    font-family: 'Dela Gothic One', sans-serif;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+  .license-list {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .license-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .license-item:last-child { border-bottom: none; }
+  .ok { color: #2BA05C; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+  .ng { color: #D94545; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+  .lic-text { color: var(--text); }
+  .lic-note { font-size: 12px; color: var(--muted); margin-left: auto; white-space: nowrap; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  /* License pills */
+  .license-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .lic-pill {
+    font-size: 11px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 2px 10px;
+    background: var(--bg);
+  }
+
+  /* Price + Buy */
+  .buy-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .price {
+    font-family: 'Dela Gothic One', sans-serif;
+    font-size: 26px;
+    color: var(--text);
+  }
+  .price span { font-size: 14px; font-family: 'Noto Sans JP', sans-serif; color: var(--muted); }
+
+  .buy-btn {
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: none;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    background: var(--accent);
+    color: #fff;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+
+  /* ── Sale type badges ── */
+  .sale-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .sale-badge.one-of-a-kind {
+    background: #FFF3E0;
+    color: #C25F00;
+    border: 1px solid #FFD59E;
+  }
+  .sale-badge.regular {
+    background: var(--accent-light);
+    color: var(--accent);
+    border: 1px solid #C5CEFB;
+  }
+  .sale-badge.free {
+    background: #EDFAF3;
+    color: #1A7A47;
+    border: 1px solid #9DE3BF;
+  }
+  /* Sold-out state for one-of-a-kind */
+  .card.sold-out { opacity: 0.55; }
+  .card.sold-out .buy-btn { background: #ccc; cursor: not-allowed; }
+  .card.sold-out .buy-btn::after { content: ' — SOLD'; }
+
+  /* 準備中ボタン */
+  .buy-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none !important;
+  }
+
+  /* Free download button */
+  .buy-btn.free-btn {
+    background: #1A7A47;
+  }
+  .buy-btn.free-btn:hover { opacity: 0.85; }
+
+  /* Sale type filter */
+  .filter-bar .filter-btn[data-type] { }
+  .filter-btn[data-type="one-of-a-kind"].active { background: #C25F00; border-color: #C25F00; }
+  .filter-btn[data-type="free"].active { background: #1A7A47; border-color: #1A7A47; }
+
+  @keyframes floatUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .card { animation: floatUp 0.4s ease both; }
+  .card:nth-child(2) { animation-delay: 0.05s; }
+  .card:nth-child(3) { animation-delay: 0.1s; }
+  .card:nth-child(4) { animation-delay: 0.15s; }
+  .card:nth-child(5) { animation-delay: 0.2s; }
+  .card:nth-child(6) { animation-delay: 0.25s; }
+
+  @media(max-width:600px) {
+    header { padding: 40px 20px 0; }
+    .grid { padding: 0 20px 60px; }
+    .stats-bar { gap: 24px; padding: 28px 20px; }
+    .section { padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-badge"><div class="logo-badge-inner">BGM SHOP by NEONOTE</div></div>
+  <h1>NEONOTE<br>BGM SHOP</h1>
+  <p class="subtitle">配信・動画・ゲーム・ビジネスに使えるロイヤリティフリーBGM。<br>全曲Sunoで制作。即時ダウンロード販売。</p>
+</header>
+
+
+
+<div class="filter-bar">
+  <button class="filter-btn active" data-genre="all" onclick="filterCards('all')">すべて</button>
+  <button class="filter-btn" data-genre="vtuber" onclick="filterCards('vtuber')">🎙 配信・Vtuber</button>
+  <button class="filter-btn" data-genre="youtube" onclick="filterCards('youtube')">▶ 動画・YouTube</button>
+  <button class="filter-btn" data-genre="game" onclick="filterCards('game')">🎮 ゲーム・アプリ</button>
+  <button class="filter-btn" data-genre="business" onclick="filterCards('business')">💼 ビジネス</button>
+</div>
+<div class="filter-bar" style="padding-top:0; padding-bottom:32px;">
+  <button class="filter-btn active" data-type="all" onclick="filterByType('all')">全種別</button>
+  <button class="filter-btn" data-type="one-of-a-kind" onclick="filterByType('one-of-a-kind')">🔶 一品物</button>
+  <button class="filter-btn" data-type="regular" onclick="filterByType('regular')">📦 通常</button>
+  <button class="filter-btn" data-type="free" onclick="filterByType('free')">🎁 フリー</button>
+</div>
+
+<div class="grid">
+
+  <!-- Card 1 -->
+  <div class="card" data-genre="vtuber" data-type="one-of-a-kind">
+    <div class="card-jacket" style="--jacket-color: linear-gradient(135deg, #0f0c29, #302b63, #24243e);">
+      <img src="images/neon-lobby.jpg" alt="Neon Lobby jacket" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+      <div class="jacket-placeholder">🎙</div>
+    </div>
+    <span class="card-tag">配信・Vtuber</span>
+    <div class="sale-badge one-of-a-kind">🔶 一品物 · 限定1点</div>
+    <div class="card-title">Neon Lobby</div>
+    <div class="card-desc">待機画面にぴったりな軽快なシンセポップ。ループ仕様で途切れなし。</div>
+    <div class="waveform" id="wf1" onclick="togglePlay('audio1','wf1','pb1')"></div>
+    <div class="player-row">
+      <button class="play-btn" id="pb1" onclick="togglePlay('audio1','wf1','pb1')">▶</button>
+      <div class="player-info"><div class="player-time" id="pt1">2:34</div></div>
+    </div>
+    <audio id="audio1" src="audio/neon-lobby.mp3"></audio>
+    <div class="volume-row">
+      <span class="volume-icon" onclick="toggleMute('audio1','vol1','vnum1')">🔊</span>
+      <input class="volume-slider" id="vol1" type="range" min="0" max="100" value="50" oninput="setVolume('audio1','vol1','vnum1')">
+      <span class="volume-num" id="vnum1">50</span>
+    </div>
+    <div class="license-row">
+      <span class="lic-pill">配信OK</span>
+      <span class="lic-pill">収益化OK</span>
+      <span class="lic-pill">ループ</span>
+    </div>
+    <div class="buy-row">
+      <div class="price">¥500 <span>/ 1曲</span></div>
+      <button class="buy-btn" id="buy-audio1">準備中</button>
+    </div>
+  </div>
+
+  <!-- Card 2 -->
+  <div class="card" data-genre="vtuber" data-type="regular">
+    <div class="card-jacket" style="--jacket-color: linear-gradient(135deg, #1c3a3a, #2d5a5a, #1a2e2e);">
+      <img src="images/cozy-rain-cafe.jpg" alt="Cozy Rain Café jacket" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+      <div class="jacket-placeholder">☕</div>
+    </div>
+    <span class="card-tag">配信・Vtuber</span>
+    <div class="sale-badge regular">📦 通常販売</div>
+    <div class="card-title">Cozy Rain Café</div>
+    <div class="card-desc">ローファイチルのBGM。リラックス配信・作業配信向け。雨音ループ入り。</div>
+    <div class="waveform" id="wf2"></div>
+    <div class="player-row">
+      <button class="play-btn" id="pb2" onclick="togglePlay('audio2','wf2','pb2')">▶</button>
+      <div class="player-info"><div class="player-time" id="pt2">3:10</div></div>
+    </div>
+    <audio id="audio2" src="audio/cozy-rain-cafe.mp3"></audio>
+    <div class="volume-row">
+      <span class="volume-icon" onclick="toggleMute('audio2','vol2','vnum2')">🔊</span>
+      <input class="volume-slider" id="vol2" type="range" min="0" max="100" value="50" oninput="setVolume('audio2','vol2','vnum2')">
+      <span class="volume-num" id="vnum2">50</span>
+    </div>
+    <div class="license-row">
+      <span class="lic-pill">配信OK</span>
+      <span class="lic-pill">収益化OK</span>
+      <span class="lic-pill">ループ</span>
+    </div>
+    <div class="buy-row">
+      <div class="price">¥500 <span>/ 1曲</span></div>
+      <button class="buy-btn" id="buy-audio2">準備中</button>
+    </div>
+  </div>
+
+  <!-- Card 3 -->
+  <div class="card" data-genre="youtube" data-type="regular">
+    <div class="card-jacket" style="--jacket-color: linear-gradient(135deg, #f7971e, #ffd200, #f7971e);">
+      <img src="images/spark-intro.jpg" alt="Spark Intro jacket" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+      <div class="jacket-placeholder">⚡</div>
+    </div>
+    <span class="card-tag">動画・YouTube</span>
+    <div class="sale-badge regular">📦 通常販売</div>
+    <div class="card-title">Spark Intro</div>
+    <div class="card-desc">オープニング・イントロに最適な元気系ポップ。テンション上げる30秒版も付属。</div>
+    <div class="waveform" id="wf3"></div>
+    <div class="player-row">
+      <button class="play-btn" id="pb3" onclick="togglePlay('audio3','wf3','pb3')">▶</button>
+      <div class="player-info"><div class="player-time" id="pt3">1:45</div></div>
+    </div>
+    <audio id="audio3" src="audio/spark-intro.mp3"></audio>
+    <div class="volume-row">
+      <span class="volume-icon" onclick="toggleMute('audio3','vol3','vnum3')">🔊</span>
+      <input class="volume-slider" id="vol3" type="range" min="0" max="100" value="50" oninput="setVolume('audio3','vol3','vnum3')">
+      <span class="volume-num" id="vnum3">50</span>
+    </div>
+    <div class="license-row">
+      <span class="lic-pill">YouTube収益化OK</span>
+      <span class="lic-pill">商用可</span>
+    </div>
+    <div class="buy-row">
+      <div class="price">¥800 <span>/ 1曲</span></div>
+      <button class="buy-btn" id="buy-audio3">準備中</button>
+    </div>
+  </div>
+
+  <!-- Card 4 -->
+  <div class="card" data-genre="youtube" data-type="free">
+    <div class="card-jacket" style="--jacket-color: linear-gradient(135deg, #56ab2f, #a8e063, #56ab2f);">
+      <img src="images/daily-vlog-drive.jpg" alt="Daily Vlog Drive jacket" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+      <div class="jacket-placeholder">🌿</div>
+    </div>
+    <span class="card-tag">動画・YouTube</span>
+    <div class="sale-badge free">🎁 フリー · 無料DL</div>
+    <div class="card-title">Daily Vlog Drive</div>
+    <div class="card-desc">Vlog・日常動画向けのアコースティックポップ。明るくさりげなく。</div>
+    <div class="waveform" id="wf4"></div>
+    <div class="player-row">
+      <button class="play-btn" id="pb4" onclick="togglePlay('audio4','wf4','pb4')">▶</button>
+      <div class="player-info"><div class="player-time" id="pt4">2:58</div></div>
+    </div>
+    <audio id="audio4" src="audio/daily-vlog-drive.mp3"></audio>
+    <div class="volume-row">
+      <span class="volume-icon" onclick="toggleMute('audio4','vol4','vnum4')">🔊</span>
+      <input class="volume-slider" id="vol4" type="range" min="0" max="100" value="50" oninput="setVolume('audio4','vol4','vnum4')">
+      <span class="volume-num" id="vnum4">50</span>
+    </div>
+    <div class="license-row">
+      <span class="lic-pill">YouTube収益化OK</span>
+      <span class="lic-pill">SNS投稿OK</span>
+    </div>
+    <div class="buy-row">
+      <div class="price">¥0 <span>/ 無料</span></div>
+      <button class="buy-btn free-btn" id="buy-audio4">無料DL</button>
+    </div>
+  </div>
+
+  <!-- Card 5 -->
+  <div class="card" data-genre="game" data-type="one-of-a-kind">
+    <div class="card-jacket" style="--jacket-color: linear-gradient(135deg, #0a0a0a, #1a0533, #2d1b69);">
+      <img src="images/dungeon-echo.jpg" alt="Dungeon Echo jacket" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+      <div class="jacket-placeholder">⚔️</div>
+    </div>
+    <span class="card-tag">ゲーム・アプリ</span>
+    <div class="sale-badge one-of-a-kind">🔶 一品物 · 限定1点</div>
+    <div class="card-title">Dungeon Echo</div>
+    <div class="card-desc">ダンジョン探索系RPGに合うオーケストラ×エレクトロ。シームレスループ。</div>
+    <div class="waveform" id="wf5"></div>
+    <div class="player-row">
+      <button class="play-btn" id="pb5" onclick="togglePlay('audio5','wf5','pb5')">▶</button>
+      <div class="player-info"><div class="player-time" id="pt5">3:22</div></div>
+    </div>
+    <audio id="audio5" src="audio/dungeon-echo.mp3"></audio>
+    <div class="volume-row">
+      <span class="volume-icon" onclick="toggleMute('audio5','vol5','vnum5')">🔊</span>
+      <input class="volume-slider" id="vol5" type="range" min="0" max="100" value="50" oninput="setVolume('audio5','vol5','vnum5')">
+      <span class="volume-num" id="vnum5">50</span>
+    </div>
+    <div class="license-row">
+      <span class="lic-pill">ゲーム内使用OK</span>
+      <span class="lic-pill">アプリOK</span>
+      <span class="lic-pill">ループ</span>
+    </div>
+    <div class="buy-row">
+      <div class="price">¥1,200 <span>/ 1曲</span></div>
+      <button class="buy-btn" id="buy-audio5">準備中</button>
+    </div>
+  </div>
+
+  <!-- Card 6 -->
+  <div class="card" data-genre="business" data-type="regular">
+    <div class="card-jacket" style="--jacket-color: linear-gradient(135deg, #1a237e, #3949ab, #7986cb);">
+      <img src="images/clarity-pulse.jpg" alt="Clarity Pulse jacket" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+      <div class="jacket-placeholder">💼</div>
+    </div>
+    <span class="card-tag">ビジネス</span>
+    <div class="sale-badge regular">📦 通常販売</div>
+    <div class="card-title">Clarity Pulse</div>
+    <div class="card-desc">プレゼン・企業VP・展示会向けのクリーンなコーポレートBGM。</div>
+    <div class="waveform" id="wf6"></div>
+    <div class="player-row">
+      <button class="play-btn" id="pb6" onclick="togglePlay('audio6','wf6','pb6')">▶</button>
+      <div class="player-info"><div class="player-time" id="pt6">2:15</div></div>
+    </div>
+    <audio id="audio6" src="audio/clarity-pulse.mp3"></audio>
+    <div class="volume-row">
+      <span class="volume-icon" onclick="toggleMute('audio6','vol6','vnum6')">🔊</span>
+      <input class="volume-slider" id="vol6" type="range" min="0" max="100" value="50" oninput="setVolume('audio6','vol6','vnum6')">
+      <span class="volume-num" id="vnum6">50</span>
+    </div>
+    <div class="license-row">
+      <span class="lic-pill">商用OK</span>
+      <span class="lic-pill">社内動画OK</span>
+      <span class="lic-pill">広告OK</span>
+    </div>
+    <div class="buy-row">
+      <div class="price">¥1,500 <span>/ 1曲</span></div>
+      <button class="buy-btn" id="buy-audio6">準備中</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- License section -->
+<div class="section">
+  <div class="section-title">ライセンスについて</div>
+  <div class="license-list">
+    <div class="license-item"><span class="ok">✓</span><span class="lic-text">個人使用・非商用</span></div>
+    <div class="license-item"><span class="ok">✓</span><span class="lic-text">YouTube・配信収益化</span></div>
+    <div class="license-item"><span class="ok">✓</span><span class="lic-text">SNS投稿・動画編集</span></div>
+    <div class="license-item"><span class="ok">✓</span><span class="lic-text">ゲーム・アプリ組み込み（ゲーム用途のみ）</span></div>
+    <div class="license-item"><span class="ok">✓</span><span class="lic-text">商用広告・プロモ動画（ビジネス用途のみ）</span></div>
+    <div class="license-item"><span class="ng">×</span><span class="lic-text">再配布・再販売は禁止</span></div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 NEONOTE BGM SHOP — All BGM produced with Suno AI</p>
+  <p style="margin-top:6px">ご質問は <a href="/cdn-cgi/l/email-protection#5f3c30312b3e3c2b1f3a273e322f333a713c3032" style="color:var(--accent)"><span class="__cf_email__" data-cfemail="5a3935342e3b392e1a3f223b372a363f74393537">[email&#160;protected]</span></a> まで</p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Generate random waveform bars
+  document.querySelectorAll('.waveform').forEach(wf => {
+    const bars = 40;
+    for(let i=0;i<bars;i++){
+      const bar = document.createElement('div');
+      bar.className = 'wave-bar';
+      const h = 8 + Math.random()*24;
+      bar.style.height = h+'px';
+      wf.appendChild(bar);
+    }
+  });
+
+  // ジャンルフィルター
+  let activeGenre = 'all';
+  let activeType  = 'all';
+
+  function applyFilters() {
+    document.querySelectorAll('.card').forEach(c => {
+      const genreMatch = activeGenre === 'all' || c.dataset.genre === activeGenre;
+      const typeMatch  = activeType  === 'all' || c.dataset.type  === activeType;
+      c.classList.toggle('hidden', !(genreMatch && typeMatch));
+    });
+  }
+
+  function filterCards(genre) {
+    activeGenre = genre;
+    document.querySelectorAll('.filter-btn[data-genre]').forEach(b => {
+      b.classList.toggle('active', b.dataset.genre === genre);
+    });
+    applyFilters();
+  }
+
+  // 販売種別フィルター
+  function filterByType(type) {
+    activeType = type;
+    document.querySelectorAll('.filter-btn[data-type]').forEach(b => {
+      b.classList.toggle('active', b.dataset.type === type);
+    });
+    applyFilters();
+  }
+
+  // プレーヤー
+  let currentPlaying = null;
+  function togglePlay(audioId, wfId, btnId) {
+    const audio = document.getElementById(audioId);
+    const btn   = document.getElementById(btnId);
+
+    // 別の曲が再生中なら止める
+    if(currentPlaying && currentPlaying !== btnId) {
+      const prevBtn   = document.getElementById(currentPlaying);
+      const prevAudio = document.getElementById(currentPlaying.replace('pb','audio'));
+      if(prevBtn)   prevBtn.textContent = '▶';
+      if(prevAudio) { prevAudio.pause(); prevAudio.currentTime = 0; }
+      const prevWfId = prevBtn ? prevBtn.closest('.card').querySelector('.waveform').id : null;
+      if(prevWfId) animateBars(prevWfId, false);
+    }
+
+    if(btn.textContent === '▶') {
+      btn.textContent = '⏸';
+      currentPlaying  = btnId;
+      audio.play();
+      animateBars(wfId, true);
+      // 曲の長さを表示
+      audio.addEventListener('loadedmetadata', () => updateTime(audioId, wfId, btnId), { once: true });
+      audio.addEventListener('timeupdate', () => {
+        const ptId = btnId.replace('pb','pt');
+        const pt   = document.getElementById(ptId);
+        if(pt && audio.duration) {
+          const rem = audio.duration - audio.currentTime;
+          pt.textContent = fmtTime(rem);
+        }
+      });
+      // 再生終了
+      audio.addEventListener('ended', () => {
+        btn.textContent = '▶';
+        currentPlaying  = null;
+        animateBars(wfId, false);
+        audio.currentTime = 0;
+        const ptId = btnId.replace('pb','pt');
+        const pt   = document.getElementById(ptId);
+        if(pt) pt.textContent = fmtTime(audio.duration);
+      }, { once: true });
+    } else {
+      btn.textContent = '▶';
+      currentPlaying  = null;
+      audio.pause();
+      animateBars(wfId, false);
+    }
+  }
+
+  function fmtTime(sec) {
+    if(!sec || isNaN(sec)) return '--:--';
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    return m + ':' + String(s).padStart(2,'0');
+  }
+
+  function updateTime(audioId, wfId, btnId) {
+    const audio = document.getElementById(audioId);
+    const ptId  = btnId.replace('pb','pt');
+    const pt    = document.getElementById(ptId);
+    if(pt) pt.textContent = fmtTime(audio.duration);
+  }
+
+  // ページ読み込み時に曲の長さを取得して表示
+  document.querySelectorAll('audio[src]').forEach(audio => {
+    const idx  = audio.id.replace('audio','');
+    const ptEl = document.getElementById('pt' + idx);
+    if(!ptEl) return;
+    audio.addEventListener('loadedmetadata', () => {
+      ptEl.textContent = fmtTime(audio.duration);
+    });
+  });
+
+  // 音量制御
+  function setVolume(audioId, sliderId, numId) {
+    const audio  = document.getElementById(audioId);
+    const slider = document.getElementById(sliderId);
+    const num    = document.getElementById(numId);
+    const val    = parseInt(slider.value);
+    audio.volume = val / 100;
+    num.textContent = val;
+    // アイコン更新
+    const icon = slider.closest('.volume-row').querySelector('.volume-icon');
+    icon.textContent = val === 0 ? '🔇' : val < 50 ? '🔉' : '🔊';
+    // スライダーの塗り色を更新
+    const pct = val + '%';
+    slider.style.background =
+      `linear-gradient(to right, var(--accent) ${pct}, var(--border) ${pct})`;
+  }
+
+  function toggleMute(audioId, sliderId, numId) {
+    const audio  = document.getElementById(audioId);
+    const slider = document.getElementById(sliderId);
+    const icon   = slider.closest('.volume-row').querySelector('.volume-icon');
+    if(audio.volume > 0) {
+      slider.dataset.prevVol = slider.value;
+      audio.volume = 0;
+      slider.value = 0;
+      icon.textContent = '🔇';
+      slider.style.background = `linear-gradient(to right, var(--accent) 0%, var(--border) 0%)`;
+    } else {
+      const prev = parseInt(slider.dataset.prevVol) || 50;
+      audio.volume = prev / 100;
+      slider.value = prev;
+      icon.textContent = prev < 50 ? '🔉' : '🔊';
+      slider.style.background =
+        `linear-gradient(to right, var(--accent) ${prev}%, var(--border) ${prev}%)`;
+    }
+    document.getElementById(numId).textContent = slider.value;
+  }
+
+  // 初期表示：スライダーの塗り色をセット
+  document.querySelectorAll('.volume-slider').forEach(slider => {
+    const pct = slider.value + '%';
+    slider.style.background =
+      `linear-gradient(to right, var(--accent) ${pct}, var(--border) ${pct})`;
+    // 初期音量をaudioに反映
+    const audioId = slider.id.replace('vol','audio');
+    const audio   = document.getElementById(audioId);
+    if(audio) audio.volume = parseInt(slider.value) / 100;
+  });
+
+  const animations = {};
+  function animateBars(wfId, playing) {
+    const wf = document.getElementById(wfId);
+    if(!wf) return;
+    if(playing) {
+      animations[wfId] = setInterval(() => {
+        wf.querySelectorAll('.wave-bar').forEach(bar => {
+          bar.style.height = (8 + Math.random() * 24) + 'px';
+          bar.style.background = 'var(--accent)';
+        });
+      }, 120);
+    } else {
+      clearInterval(animations[wfId]);
+      wf.querySelectorAll('.wave-bar').forEach(bar => {
+        bar.style.height = '';
+        bar.style.background = 'var(--border)';
+      });
+    }
+  }
+
+  // ── 管理ページのlocalStorageを読み取り購入ボタンを設定 ──
+  function applyProductSettings() {
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem('neonote_products')) || {}; } catch {}
+
+    document.querySelectorAll('.card').forEach(card => {
+      // card の audio id を特定（audio1〜audio6）
+      const audio = card.querySelector('audio');
+      if(!audio) return;
+      const id   = audio.id;           // "audio1" など
+      const btn  = document.getElementById('buy-' + id);
+      if(!btn) return;
+
+      const data     = saved[id] || {};
+      const url      = data.boothUrl || '';
+      const soldOut  = data.soldOut  || false;
+      const isFree   = card.dataset.type === 'free';
+      const isOneOf  = card.dataset.type === 'one-of-a-kind';
+
+      // SOLD OUT（一品物）
+      if(isOneOf && soldOut) {
+        card.classList.add('sold-out');
+        btn.textContent = 'SOLD OUT';
+        btn.disabled = true;
+        return;
+      }
+
+      // フリー
+      if(isFree) {
+        if(url) {
+          btn.textContent = '無料DL';
+          btn.disabled = false;
+          btn.onclick = () => window.open(url, '_blank', 'noopener');
+        } else {
+          btn.textContent = '無料DL';
+          btn.disabled = false;
+          // URLなし＝直接ダウンロードなどは後で対応
+        }
+        return;
+      }
+
+      // 通常・一品物（URL設定済み）
+      if(url) {
+        btn.textContent = 'BOOTHで購入 →';
+        btn.disabled = false;
+        btn.style.opacity = '';
+        btn.onclick = () => window.open(url, '_blank', 'noopener');
+      } else {
+        btn.textContent = '準備中';
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.onclick = null;
+      }
+    });
+  }
+
+  applyProductSettings();
+</script>
+</body>
+</html>

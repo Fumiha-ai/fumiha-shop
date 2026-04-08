@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEONOTE 管理ページ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #4A6CF7;
+    --accent-light: #EEF1FE;
+    --bg: #F7F8FC;
+    --bg2: #FFFFFF;
+    --border: #E4E7F0;
+    --text: #1A1C2A;
+    --muted: #6B7080;
+    --radius: 14px;
+    --ok: #2BA05C;
+    --ng: #D94545;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ── ログイン画面 ── */
+  #login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .login-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 48px 40px;
+    width: 360px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(74,108,247,0.08);
+  }
+  .login-box h1 {
+    font-family: 'Dela Gothic One', sans-serif;
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+  .login-box p { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+  .login-box input[type="password"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: 'Noto Sans JP', sans-serif;
+    margin-bottom: 14px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .login-box input[type="password"]:focus { border-color: var(--accent); }
+  .login-box button {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .login-box button:hover { opacity: 0.85; }
+  .login-error {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--ng);
+    display: none;
+  }
+
+  /* ── 管理画面 ── */
+  #admin-screen { display: none; }
+
+  header {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .header-title {
+    font-family: 'Dela Gothic One', sans-serif;
+    font-size: 18px;
+  }
+  .header-title span {
+    font-size: 12px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 400;
+    color: var(--muted);
+    margin-left: 10px;
+  }
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+  .btn {
+    padding: 9px 20px;
+    border-radius: 999px;
+    border: none;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .btn:hover { opacity: 0.85; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-outline { background: var(--bg2); color: var(--text); border: 1.5px solid var(--border); }
+  .btn-logout  { background: var(--bg); color: var(--muted); border: 1.5px solid var(--border); font-size: 12px; padding: 7px 14px; }
+  .btn-sync    { background: #1A7A47; color: #fff; }
+  .btn-sync:disabled { background: #ccc; cursor: not-allowed; opacity: 0.7; }
+
+  /* 同期ステータス */
+  .sync-banner {
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 28px;
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+  .sync-banner.show { display: flex; }
+  .sync-banner.running { background: #EEF1FE; border: 1px solid #C5CEFB; color: var(--accent); }
+  .sync-banner.done    { background: #EDFAF3; border: 1px solid #9DE3BF; color: #1A7A47; }
+  .sync-banner.error   { background: #FEF2F2; border: 1px solid #FCA5A5; color: var(--ng); }
+
+  /* 商品行の同期結果バッジ */
+  .sync-result {
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-left: 6px;
+  }
+  .sync-result.checking { background: #EEF1FE; color: var(--accent); }
+  .sync-result.in-stock { background: #EDFAF3; color: #1A7A47; }
+  .sync-result.sold-out { background: #FFF3E0; color: #C25F00; }
+  .sync-result.error    { background: #FEF2F2; color: var(--ng); }
+
+  .main { max-width: 900px; margin: 0 auto; padding: 40px; }
+
+  .save-banner {
+    background: #EDFAF3;
+    border: 1px solid #9DE3BF;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 13px;
+    color: #1A7A47;
+    font-weight: 700;
+    margin-bottom: 28px;
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+  .save-banner.show { display: flex; }
+
+  /* ── 商品リスト ── */
+  .product-list { display: flex; flex-direction: column; gap: 16px; }
+
+  .product-row {
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 72px 1fr auto;
+    gap: 20px;
+    align-items: center;
+  }
+  .product-row[data-type="one-of-a-kind"] { border-color: #FFB74D; background: #FFFAF4; }
+  .product-row[data-type="regular"]        { border-color: #C5CEFB; background: #F5F7FF; }
+  .product-row[data-type="free"]           { border-color: #9DE3BF; background: #F3FBF7; }
+
+  .product-jacket {
+    width: 72px;
+    aspect-ratio: 16/9;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #dde1f0;
+    flex-shrink: 0;
+  }
+  .product-jacket img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .product-info { min-width: 0; }
+  .product-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .product-name {
+    font-family: 'Dela Gothic One', sans-serif;
+    font-size: 16px;
+  }
+  .type-badge {
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 4px;
+    padding: 2px 8px;
+  }
+  .type-badge.one-of-a-kind { background: #FFF3E0; color: #C25F00; border: 1px solid #FFD59E; }
+  .type-badge.regular        { background: var(--accent-light); color: var(--accent); border: 1px solid #C5CEFB; }
+  .type-badge.free           { background: #EDFAF3; color: #1A7A47; border: 1px solid #9DE3BF; }
+
+  .url-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .url-input {
+    flex: 1;
+    padding: 9px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Noto Sans JP', sans-serif;
+    outline: none;
+    transition: border-color 0.15s;
+    min-width: 0;
+    background: #fff;
+  }
+  .url-input:focus { border-color: var(--accent); }
+  .url-input.has-url { border-color: var(--ok); }
+  .url-input::placeholder { color: #bbb; }
+
+  .test-link {
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    white-space: nowrap;
+    font-weight: 700;
+    padding: 4px 6px;
+    border-radius: 4px;
+    display: none;
+  }
+  .test-link:hover { background: var(--accent-light); }
+  .test-link.show { display: inline; }
+
+  /* sold-out トグル */
+  .soldout-area { text-align: right; flex-shrink: 0; }
+  .toggle-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--muted);
+    cursor: pointer;
+    user-select: none;
+  }
+  .toggle-label.disabled-area { opacity: 0.35; pointer-events: none; }
+  .toggle {
+    position: relative;
+    width: 42px;
+    height: 24px;
+  }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle-track {
+    position: absolute;
+    inset: 0;
+    background: var(--border);
+    border-radius: 999px;
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+  .toggle input:checked + .toggle-track { background: var(--ng); }
+  .toggle-track::after {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    top: 3px; left: 3px;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle input:checked + .toggle-track::after { transform: translateX(18px); }
+
+  .status-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-right: 4px;
+  }
+  .status-dot.set   { background: var(--ok); }
+  .status-dot.unset { background: #ccc; }
+
+  /* ショップへのリンク */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 13px;
+    text-decoration: none;
+    margin-bottom: 28px;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  @media(max-width: 640px) {
+    header { padding: 16px 20px; }
+    .main { padding: 24px 20px; }
+    .product-row { grid-template-columns: 56px 1fr; grid-template-rows: auto auto; }
+    .soldout-area { grid-column: 2; justify-self: end; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ログイン画面 -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>管理者ログイン</h1>
+    <p>NEONOTE BGM SHOP 管理ページ</p>
+    <input type="password" id="pw-input" placeholder="パスワードを入力" onkeydown="if(event.key==='Enter')doLogin()">
+    <button onclick="doLogin()">ログイン</button>
+    <div class="login-error" id="login-error">パスワードが違います</div>
+  </div>
+</div>
+
+<!-- 管理画面 -->
+<div id="admin-screen">
+  <header>
+    <div class="header-title">
+      管理ページ
+      <span>NEONOTE BGM SHOP</span>
+    </div>
+    <div class="header-actions">
+      <a href="bgm-shop.html" target="_blank" class="btn btn-outline">ショップを見る ↗</a>
+      <button class="btn btn-sync" id="sync-btn" onclick="syncBooth()">🔄 BOOTHと同期</button>
+      <button class="btn btn-primary" onclick="saveAll()">すべて保存</button>
+      <button class="btn btn-logout" onclick="doLogout()">ログアウト</button>
+    </div>
+  </header>
+
+  <div class="main">
+    <a href="bgm-shop.html" class="back-link">← ショップへ戻る</a>
+
+    <div class="save-banner" id="save-banner">✓ 保存しました</div>
+    <div class="sync-banner" id="sync-banner"></div>
+
+    <div class="product-list" id="product-list">
+      <!-- JSで生成 -->
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── パスワード設定（ここを変更してください） ──
+  const ADMIN_PASSWORD = 'neonote2025';
+
+  // ── 商品データ ──
+  const PRODUCTS = [
+    { id: 'audio1', name: 'Neon Lobby',       genre: '配信・Vtuber',  type: 'one-of-a-kind', jacket: 'images/neon-lobby.jpg',       price: '¥500'  },
+    { id: 'audio2', name: 'Cozy Rain Café',   genre: '配信・Vtuber',  type: 'regular',        jacket: 'images/cozy-rain-cafe.jpg',   price: '¥500'  },
+    { id: 'audio3', name: 'Spark Intro',      genre: '動画・YouTube', type: 'regular',        jacket: 'images/spark-intro.jpg',      price: '¥800'  },
+    { id: 'audio4', name: 'Daily Vlog Drive', genre: '動画・YouTube', type: 'free',           jacket: 'images/daily-vlog-drive.jpg', price: '¥0'    },
+    { id: 'audio5', name: 'Dungeon Echo',     genre: 'ゲーム・アプリ', type: 'one-of-a-kind', jacket: 'images/dungeon-echo.jpg',     price: '¥1,200'},
+    { id: 'audio6', name: 'Clarity Pulse',   genre: 'ビジネス',       type: 'regular',        jacket: 'images/clarity-pulse.jpg',    price: '¥1,500'},
+  ];
+
+  const TYPE_LABEL = {
+    'one-of-a-kind': '🔶 一品物',
+    'regular':        '📦 通常',
+    'free':           '🎁 フリー',
+  };
+
+  // ── ログイン ──
+  function doLogin() {
+    const val = document.getElementById('pw-input').value;
+    if(val === ADMIN_PASSWORD) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-screen').style.display = 'block';
+      renderProducts();
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+      document.getElementById('pw-input').value = '';
+    }
+  }
+
+  function doLogout() {
+    document.getElementById('admin-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('pw-input').value = '';
+  }
+
+  // ── 商品リスト描画 ──
+  function renderProducts() {
+    const saved = getSaved();
+    const list  = document.getElementById('product-list');
+    list.innerHTML = '';
+
+    PRODUCTS.forEach(p => {
+      const data     = saved[p.id] || {};
+      const url      = data.boothUrl  || '';
+      const soldOut  = data.soldOut   || false;
+      const hasUrl   = url.length > 0;
+      const isOneOf  = p.type === 'one-of-a-kind';
+      const isFree   = p.type === 'free';
+
+      const row = document.createElement('div');
+      row.className = 'product-row';
+      row.dataset.type = p.type;
+      row.dataset.id   = p.id;
+
+      row.innerHTML = `
+        <div class="product-jacket">
+          <img src="${p.jacket}" onerror="this.style.display='none'" alt="${p.name}">
+        </div>
+        <div class="product-info">
+          <div class="product-meta">
+            <span class="product-name">${p.name}</span>
+            <span class="type-badge ${p.type}">${TYPE_LABEL[p.type]}</span>
+            <span style="font-size:12px;color:var(--muted)">${p.genre} · ${p.price}</span>
+          </div>
+          <div class="url-row">
+            <span style="font-size:12px;color:var(--muted);white-space:nowrap">BOOTH URL</span>
+            <input
+              class="url-input ${hasUrl ? 'has-url' : ''} ${isFree ? 'disabled-input' : ''}"
+              id="url-${p.id}"
+              type="url"
+              placeholder="${isFree ? '無料DLのためURLは不要' : 'https://xxxxx.booth.pm/items/xxxxxxx'}"
+              value="${url}"
+              ${isFree ? 'disabled' : ''}
+              oninput="onUrlInput('${p.id}')"
+            >
+            <a class="test-link ${hasUrl && !isFree ? 'show' : ''}" id="test-${p.id}" href="${url}" target="_blank" rel="noopener">確認 ↗</a>
+          </div>
+          <div style="margin-top:6px;font-size:12px;color:${hasUrl || isFree ? 'var(--ok)' : 'var(--muted)'}">
+            <span class="status-dot ${hasUrl || isFree ? 'set' : 'unset'}"></span>
+            ${isFree ? '無料DL（URLなし）' : hasUrl ? 'URL設定済み' : '未設定'}
+          </div>
+        </div>
+        <div class="soldout-area">
+          <label class="toggle-label ${!isOneOf ? 'disabled-area' : ''}">
+            <span>SOLD OUT</span>
+            <span class="toggle">
+              <input type="checkbox" id="sold-${p.id}" ${soldOut ? 'checked' : ''} ${!isOneOf ? 'disabled' : ''} onchange="onSoldChange('${p.id}')">
+              <span class="toggle-track"></span>
+            </span>
+            ${isOneOf ? '' : '<span style="font-size:10px">一品物のみ</span>'}
+          </label>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  // ── URL入力時 ──
+  function onUrlInput(id) {
+    const input   = document.getElementById('url-' + id);
+    const testBtn = document.getElementById('test-' + id);
+    const hasUrl  = input.value.trim().length > 0;
+    input.classList.toggle('has-url', hasUrl);
+    testBtn.classList.toggle('show', hasUrl);
+    if(hasUrl) testBtn.href = input.value.trim();
+  }
+
+  function onSoldChange(id) {}
+
+  // ── 保存 ──
+  function saveAll() {
+    const saved = getSaved();
+    PRODUCTS.forEach(p => {
+      const urlEl  = document.getElementById('url-' + p.id);
+      const soldEl = document.getElementById('sold-' + p.id);
+      saved[p.id] = {
+        boothUrl: urlEl  ? urlEl.value.trim()   : '',
+        soldOut:  soldEl ? soldEl.checked        : false,
+      };
+    });
+    localStorage.setItem('neonote_products', JSON.stringify(saved));
+    renderProducts();
+    const banner = document.getElementById('save-banner');
+    banner.classList.add('show');
+    setTimeout(() => banner.classList.remove('show'), 3000);
+  }
+
+  function getSaved() {
+    try { return JSON.parse(localStorage.getItem('neonote_products')) || {}; }
+    catch { return {}; }
+  }
+
+  // ── BOOTH在庫同期 ──
+  async function syncBooth() {
+    const syncBtn    = document.getElementById('sync-btn');
+    const syncBanner = document.getElementById('sync-banner');
+    const saved      = getSaved();
+
+    // 一品物でURLが設定されているものだけ対象
+    const targets = PRODUCTS.filter(p =>
+      p.type === 'one-of-a-kind' && (saved[p.id]?.boothUrl || '').length > 0
+    );
+
+    if(targets.length === 0) {
+      showSyncBanner('error', '⚠ 一品物にBOOTH URLが設定されていません');
+      return;
+    }
+
+    syncBtn.disabled = true;
+    syncBtn.textContent = '確認中…';
+    showSyncBanner('running', `🔄 ${targets.length}件のBOOTH在庫を確認中…`);
+
+    // 各商品の同期結果バッジを「確認中」にする
+    targets.forEach(p => setSyncBadge(p.id, 'checking', '確認中…'));
+
+    let updatedCount = 0;
+    let errorCount   = 0;
+
+    await Promise.all(targets.map(async p => {
+      const url = saved[p.id].boothUrl;
+      try {
+        const res  = await fetch(`/.netlify/functions/check-booth-stock?url=${encodeURIComponent(url)}`);
+        const data = await res.json();
+
+        if(data.soldOut) {
+          saved[p.id].soldOut = true;
+          setSyncBadge(p.id, 'sold-out', '売り切れ');
+          updatedCount++;
+        } else {
+          setSyncBadge(p.id, 'in-stock', '在庫あり');
+        }
+      } catch {
+        setSyncBadge(p.id, 'error', 'エラー');
+        errorCount++;
+      }
+    }));
+
+    // localStorageに保存して画面を更新
+    localStorage.setItem('neonote_products', JSON.stringify(saved));
+    renderProducts();
+
+    // 同期結果バッジを再表示（renderProductsで消えるため）
+    targets.forEach(p => {
+      const result = saved[p.id]?.soldOut ? 'sold-out' : 'in-stock';
+      const label  = saved[p.id]?.soldOut ? '売り切れ → SOLD OUT更新済' : '在庫あり';
+      setSyncBadge(p.id, result, label);
+    });
+
+    const msg = errorCount > 0
+      ? `⚠ ${targets.length}件中 ${errorCount}件エラー（${updatedCount}件更新）`
+      : `✓ ${targets.length}件確認完了 — ${updatedCount}件をSOLD OUTに更新しました`;
+    showSyncBanner(errorCount > 0 ? 'error' : 'done', msg);
+
+    syncBtn.disabled = false;
+    syncBtn.textContent = '🔄 BOOTHと同期';
+  }
+
+  function setSyncBadge(id, type, label) {
+    // 商品行のメタ行に同期結果バッジを挿入
+    const row    = document.querySelector(`.product-row[data-id="${id}"]`);
+    if(!row) return;
+    let badge    = row.querySelector('.sync-result');
+    if(!badge) {
+      badge = document.createElement('span');
+      badge.className = 'sync-result';
+      row.querySelector('.product-meta').appendChild(badge);
+    }
+    badge.className = `sync-result ${type}`;
+    badge.textContent = label;
+  }
+
+  function showSyncBanner(type, msg) {
+    const banner = document.getElementById('sync-banner');
+    banner.className = `sync-banner show ${type}`;
+    banner.textContent = msg;
+    if(type === 'done') {
+      setTimeout(() => banner.classList.remove('show'), 5000);
+    }
+  }
+</script>
+</body>
+</html>
