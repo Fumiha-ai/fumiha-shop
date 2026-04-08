@@ -565,199 +565,7 @@
   <button class="filter-btn" data-type="free" onclick="filterByType('free')">🎁 フリー</button>
 </div>
 
-<div class="grid">
-
-  <!-- Card 1 -->
-  <div class="card" data-genre="vtuber" data-type="one-of-a-kind">
-    <div class="card-jacket" style="--jacket-color: linear-gradient(135deg, #0f0c29, #302b63, #24243e);">
-      <img src="images/neon-lobby.jpg" alt="Neon Lobby jacket" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
-      <div class="jacket-placeholder">🎙</div>
-    </div>
-    <span class="card-tag">配信・Vtuber</span>
-    <div class="sale-badge one-of-a-kind">🔶 一品物 · 限定1点</div>
-    <div class="card-title">Neon Lobby</div>
-    <div class="card-desc">待機画面にぴったりな軽快なシンセポップ。ループ仕様で途切れなし。</div>
-    <div class="waveform" id="wf1" onclick="togglePlay('audio1','wf1','pb1')"></div>
-    <div class="player-row">
-      <button class="play-btn" id="pb1" onclick="togglePlay('audio1','wf1','pb1')">▶</button>
-      <div class="player-info"><div class="player-time" id="pt1">2:34</div></div>
-    </div>
-    <audio id="audio1" src="audio/neon-lobby.mp3"></audio>
-    <div class="volume-row">
-      <span class="volume-icon" onclick="toggleMute('audio1','vol1','vnum1')">🔊</span>
-      <input class="volume-slider" id="vol1" type="range" min="0" max="100" value="50" oninput="setVolume('audio1','vol1','vnum1')">
-      <span class="volume-num" id="vnum1">50</span>
-    </div>
-    <div class="license-row">
-      <span class="lic-pill">配信OK</span>
-      <span class="lic-pill">収益化OK</span>
-      <span class="lic-pill">ループ</span>
-    </div>
-    <div class="buy-row">
-      <div class="price">¥500 <span>/ 1曲</span></div>
-      <button class="buy-btn" id="buy-audio1">準備中</button>
-    </div>
-  </div>
-
-  <!-- Card 2 -->
-  <div class="card" data-genre="vtuber" data-type="regular">
-    <div class="card-jacket" style="--jacket-color: linear-gradient(135deg, #1c3a3a, #2d5a5a, #1a2e2e);">
-      <img src="images/cozy-rain-cafe.jpg" alt="Cozy Rain Café jacket" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
-      <div class="jacket-placeholder">☕</div>
-    </div>
-    <span class="card-tag">配信・Vtuber</span>
-    <div class="sale-badge regular">📦 通常販売</div>
-    <div class="card-title">Cozy Rain Café</div>
-    <div class="card-desc">ローファイチルのBGM。リラックス配信・作業配信向け。雨音ループ入り。</div>
-    <div class="waveform" id="wf2"></div>
-    <div class="player-row">
-      <button class="play-btn" id="pb2" onclick="togglePlay('audio2','wf2','pb2')">▶</button>
-      <div class="player-info"><div class="player-time" id="pt2">3:10</div></div>
-    </div>
-    <audio id="audio2" src="audio/cozy-rain-cafe.mp3"></audio>
-    <div class="volume-row">
-      <span class="volume-icon" onclick="toggleMute('audio2','vol2','vnum2')">🔊</span>
-      <input class="volume-slider" id="vol2" type="range" min="0" max="100" value="50" oninput="setVolume('audio2','vol2','vnum2')">
-      <span class="volume-num" id="vnum2">50</span>
-    </div>
-    <div class="license-row">
-      <span class="lic-pill">配信OK</span>
-      <span class="lic-pill">収益化OK</span>
-      <span class="lic-pill">ループ</span>
-    </div>
-    <div class="buy-row">
-      <div class="price">¥500 <span>/ 1曲</span></div>
-      <button class="buy-btn" id="buy-audio2">準備中</button>
-    </div>
-  </div>
-
-  <!-- Card 3 -->
-  <div class="card" data-genre="youtube" data-type="regular">
-    <div class="card-jacket" style="--jacket-color: linear-gradient(135deg, #f7971e, #ffd200, #f7971e);">
-      <img src="images/spark-intro.jpg" alt="Spark Intro jacket" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
-      <div class="jacket-placeholder">⚡</div>
-    </div>
-    <span class="card-tag">動画・YouTube</span>
-    <div class="sale-badge regular">📦 通常販売</div>
-    <div class="card-title">Spark Intro</div>
-    <div class="card-desc">オープニング・イントロに最適な元気系ポップ。テンション上げる30秒版も付属。</div>
-    <div class="waveform" id="wf3"></div>
-    <div class="player-row">
-      <button class="play-btn" id="pb3" onclick="togglePlay('audio3','wf3','pb3')">▶</button>
-      <div class="player-info"><div class="player-time" id="pt3">1:45</div></div>
-    </div>
-    <audio id="audio3" src="audio/spark-intro.mp3"></audio>
-    <div class="volume-row">
-      <span class="volume-icon" onclick="toggleMute('audio3','vol3','vnum3')">🔊</span>
-      <input class="volume-slider" id="vol3" type="range" min="0" max="100" value="50" oninput="setVolume('audio3','vol3','vnum3')">
-      <span class="volume-num" id="vnum3">50</span>
-    </div>
-    <div class="license-row">
-      <span class="lic-pill">YouTube収益化OK</span>
-      <span class="lic-pill">商用可</span>
-    </div>
-    <div class="buy-row">
-      <div class="price">¥800 <span>/ 1曲</span></div>
-      <button class="buy-btn" id="buy-audio3">準備中</button>
-    </div>
-  </div>
-
-  <!-- Card 4 -->
-  <div class="card" data-genre="youtube" data-type="free">
-    <div class="card-jacket" style="--jacket-color: linear-gradient(135deg, #56ab2f, #a8e063, #56ab2f);">
-      <img src="images/daily-vlog-drive.jpg" alt="Daily Vlog Drive jacket" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
-      <div class="jacket-placeholder">🌿</div>
-    </div>
-    <span class="card-tag">動画・YouTube</span>
-    <div class="sale-badge free">🎁 フリー · 無料DL</div>
-    <div class="card-title">Daily Vlog Drive</div>
-    <div class="card-desc">Vlog・日常動画向けのアコースティックポップ。明るくさりげなく。</div>
-    <div class="waveform" id="wf4"></div>
-    <div class="player-row">
-      <button class="play-btn" id="pb4" onclick="togglePlay('audio4','wf4','pb4')">▶</button>
-      <div class="player-info"><div class="player-time" id="pt4">2:58</div></div>
-    </div>
-    <audio id="audio4" src="audio/daily-vlog-drive.mp3"></audio>
-    <div class="volume-row">
-      <span class="volume-icon" onclick="toggleMute('audio4','vol4','vnum4')">🔊</span>
-      <input class="volume-slider" id="vol4" type="range" min="0" max="100" value="50" oninput="setVolume('audio4','vol4','vnum4')">
-      <span class="volume-num" id="vnum4">50</span>
-    </div>
-    <div class="license-row">
-      <span class="lic-pill">YouTube収益化OK</span>
-      <span class="lic-pill">SNS投稿OK</span>
-    </div>
-    <div class="buy-row">
-      <div class="price">¥0 <span>/ 無料</span></div>
-      <button class="buy-btn free-btn" id="buy-audio4">無料DL</button>
-    </div>
-  </div>
-
-  <!-- Card 5 -->
-  <div class="card" data-genre="game" data-type="one-of-a-kind">
-    <div class="card-jacket" style="--jacket-color: linear-gradient(135deg, #0a0a0a, #1a0533, #2d1b69);">
-      <img src="images/dungeon-echo.jpg" alt="Dungeon Echo jacket" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
-      <div class="jacket-placeholder">⚔️</div>
-    </div>
-    <span class="card-tag">ゲーム・アプリ</span>
-    <div class="sale-badge one-of-a-kind">🔶 一品物 · 限定1点</div>
-    <div class="card-title">Dungeon Echo</div>
-    <div class="card-desc">ダンジョン探索系RPGに合うオーケストラ×エレクトロ。シームレスループ。</div>
-    <div class="waveform" id="wf5"></div>
-    <div class="player-row">
-      <button class="play-btn" id="pb5" onclick="togglePlay('audio5','wf5','pb5')">▶</button>
-      <div class="player-info"><div class="player-time" id="pt5">3:22</div></div>
-    </div>
-    <audio id="audio5" src="audio/dungeon-echo.mp3"></audio>
-    <div class="volume-row">
-      <span class="volume-icon" onclick="toggleMute('audio5','vol5','vnum5')">🔊</span>
-      <input class="volume-slider" id="vol5" type="range" min="0" max="100" value="50" oninput="setVolume('audio5','vol5','vnum5')">
-      <span class="volume-num" id="vnum5">50</span>
-    </div>
-    <div class="license-row">
-      <span class="lic-pill">ゲーム内使用OK</span>
-      <span class="lic-pill">アプリOK</span>
-      <span class="lic-pill">ループ</span>
-    </div>
-    <div class="buy-row">
-      <div class="price">¥1,200 <span>/ 1曲</span></div>
-      <button class="buy-btn" id="buy-audio5">準備中</button>
-    </div>
-  </div>
-
-  <!-- Card 6 -->
-  <div class="card" data-genre="business" data-type="regular">
-    <div class="card-jacket" style="--jacket-color: linear-gradient(135deg, #1a237e, #3949ab, #7986cb);">
-      <img src="images/clarity-pulse.jpg" alt="Clarity Pulse jacket" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
-      <div class="jacket-placeholder">💼</div>
-    </div>
-    <span class="card-tag">ビジネス</span>
-    <div class="sale-badge regular">📦 通常販売</div>
-    <div class="card-title">Clarity Pulse</div>
-    <div class="card-desc">プレゼン・企業VP・展示会向けのクリーンなコーポレートBGM。</div>
-    <div class="waveform" id="wf6"></div>
-    <div class="player-row">
-      <button class="play-btn" id="pb6" onclick="togglePlay('audio6','wf6','pb6')">▶</button>
-      <div class="player-info"><div class="player-time" id="pt6">2:15</div></div>
-    </div>
-    <audio id="audio6" src="audio/clarity-pulse.mp3"></audio>
-    <div class="volume-row">
-      <span class="volume-icon" onclick="toggleMute('audio6','vol6','vnum6')">🔊</span>
-      <input class="volume-slider" id="vol6" type="range" min="0" max="100" value="50" oninput="setVolume('audio6','vol6','vnum6')">
-      <span class="volume-num" id="vnum6">50</span>
-    </div>
-    <div class="license-row">
-      <span class="lic-pill">商用OK</span>
-      <span class="lic-pill">社内動画OK</span>
-      <span class="lic-pill">広告OK</span>
-    </div>
-    <div class="buy-row">
-      <div class="price">¥1,500 <span>/ 1曲</span></div>
-      <button class="buy-btn" id="buy-audio6">準備中</button>
-    </div>
-  </div>
-
-</div>
+<div class="grid" id="songs-grid"></div>
 
 <!-- License section -->
 <div class="section">
@@ -777,7 +585,66 @@
   <p style="margin-top:6px">ご質問は <a href="/cdn-cgi/l/email-protection#5f3c30312b3e3c2b1f3a273e322f333a713c3032" style="color:var(--accent)"><span class="__cf_email__" data-cfemail="5a3935342e3b392e1a3f223b372a363f74393537">[email&#160;protected]</span></a> まで</p>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script src="songs.js"></script>
+<script>
+  // ── songs.jsからカードを生成 ──
+  (function renderSongs() {
+    const BADGE = {
+      'one-of-a-kind': '🔶 一品物 · 限定1点',
+      'regular':        '📦 通常販売',
+      'free':           '🎁 フリー · 無料DL',
+    };
+    const grid = document.getElementById('songs-grid');
+    SONGS.forEach((song, i) => {
+      const n       = i + 1;
+      const wfId    = `wf${n}`;
+      const pbId    = `pb${n}`;
+      const ptId    = `pt${n}`;
+      const volId   = `vol${n}`;
+      const vnumId  = `vnum${n}`;
+      const buyId   = `buy-${song.id}`;
+      const isFree  = song.type === 'free';
+      const priceHtml = isFree
+        ? '¥0 <span>/ 無料</span>'
+        : `¥${song.price.toLocaleString()} <span>/ 1曲</span>`;
+      const buyClass = isFree ? 'buy-btn free-btn' : 'buy-btn';
+      const buyText  = isFree ? '無料DL' : '準備中';
+      const licenses = song.licenses.map(l => `<span class="lic-pill">${l}</span>`).join('');
+
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.genre = song.genre;
+      card.dataset.type  = song.type;
+      card.style.animationDelay = `${i * 0.05}s`;
+      card.innerHTML = `
+        <div class="card-jacket" style="--jacket-color:${song.jacketGradient}">
+          <img src="${song.jacket}" alt="${song.title}" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+          <div class="jacket-placeholder">${song.jacketEmoji}</div>
+        </div>
+        <span class="card-tag">${song.genreLabel}</span>
+        <div class="sale-badge ${song.type}">${BADGE[song.type]}</div>
+        <div class="card-title">${song.title}</div>
+        <div class="card-desc">${song.description}</div>
+        <div class="waveform" id="${wfId}" onclick="togglePlay('${song.id}','${wfId}','${pbId}')"></div>
+        <div class="player-row">
+          <button class="play-btn" id="${pbId}" onclick="togglePlay('${song.id}','${wfId}','${pbId}')">▶</button>
+          <div class="player-info"><div class="player-time" id="${ptId}">${song.duration}</div></div>
+        </div>
+        <audio id="${song.id}" src="${song.audio}"></audio>
+        <div class="volume-row">
+          <span class="volume-icon" onclick="toggleMute('${song.id}','${volId}','${vnumId}')">🔊</span>
+          <input class="volume-slider" id="${volId}" type="range" min="0" max="100" value="50" oninput="setVolume('${song.id}','${volId}','${vnumId}')">
+          <span class="volume-num" id="${vnumId}">50</span>
+        </div>
+        <div class="license-row">${licenses}</div>
+        <div class="buy-row">
+          <div class="price">${priceHtml}</div>
+          <button class="${buyClass}" id="${buyId}">${buyText}</button>
+        </div>`;
+      grid.appendChild(card);
+    });
+  })();
+
   // Generate random waveform bars
   document.querySelectorAll('.waveform').forEach(wf => {
     const bars = 40;

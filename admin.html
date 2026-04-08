@@ -363,19 +363,20 @@
   </div>
 </div>
 
+<script src="songs.js"></script>
 <script>
   // ── パスワード設定（ここを変更してください） ──
   const ADMIN_PASSWORD = 'neonote2025';
 
-  // ── 商品データ ──
-  const PRODUCTS = [
-    { id: 'audio1', name: 'Neon Lobby',       genre: '配信・Vtuber',  type: 'one-of-a-kind', jacket: 'images/neon-lobby.jpg',       price: '¥500'  },
-    { id: 'audio2', name: 'Cozy Rain Café',   genre: '配信・Vtuber',  type: 'regular',        jacket: 'images/cozy-rain-cafe.jpg',   price: '¥500'  },
-    { id: 'audio3', name: 'Spark Intro',      genre: '動画・YouTube', type: 'regular',        jacket: 'images/spark-intro.jpg',      price: '¥800'  },
-    { id: 'audio4', name: 'Daily Vlog Drive', genre: '動画・YouTube', type: 'free',           jacket: 'images/daily-vlog-drive.jpg', price: '¥0'    },
-    { id: 'audio5', name: 'Dungeon Echo',     genre: 'ゲーム・アプリ', type: 'one-of-a-kind', jacket: 'images/dungeon-echo.jpg',     price: '¥1,200'},
-    { id: 'audio6', name: 'Clarity Pulse',   genre: 'ビジネス',       type: 'regular',        jacket: 'images/clarity-pulse.jpg',    price: '¥1,500'},
-  ];
+  // PRODUCTS は songs.js の SONGS を変換して使用
+  const PRODUCTS = SONGS.map(s => ({
+    id:    s.id,
+    name:  s.title,
+    genre: s.genreLabel,
+    type:  s.type,
+    jacket: s.jacket,
+    price: s.price === 0 ? '¥0' : `¥${s.price.toLocaleString()}`,
+  }));
 
   const TYPE_LABEL = {
     'one-of-a-kind': '🔶 一品物',
