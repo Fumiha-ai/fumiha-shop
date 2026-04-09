@@ -179,6 +179,22 @@
     transition: transform 0.15s, opacity 0.15s;
   }
   .play-btn:hover { transform: scale(1.1); opacity: 0.9; }
+
+  .restart-btn {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border);
+    background: var(--bg2);
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 15px;
+    transition: border-color 0.15s, color 0.15s, transform 0.15s;
+  }
+  .restart-btn:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.08); }
   .player-time { font-size: 12px; color: var(--muted); flex: 1; }
 
   /* Volume */
@@ -657,6 +673,7 @@
           <div class="waveform" id="wf" onclick="togglePlay()"></div>
           <div class="player-controls">
             <button class="play-btn" id="play-btn" onclick="togglePlay()">▶</button>
+            <button class="restart-btn" onclick="restartPlay()" title="最初から再生">⏮</button>
             <div class="player-time" id="player-time">${song.duration}</div>
           </div>
           <div class="volume-row">
@@ -776,6 +793,13 @@
       audio.pause();
       animateBars(false);
     }
+  };
+
+  window.restartPlay = function () {
+    audio.currentTime = 0;
+    audio.play();
+    playBtn.textContent = '⏸';
+    animateBars(true);
   };
 
   // Volume

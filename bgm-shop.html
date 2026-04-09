@@ -270,6 +270,22 @@
   }
   .play-btn:hover { transform: scale(1.1); opacity: 0.9; }
 
+  .restart-btn {
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border);
+    background: var(--bg2);
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color 0.15s, color 0.15s, transform 0.15s;
+    font-size: 14px;
+  }
+  .restart-btn:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.08); }
+
   .player-info { flex: 1; }
   .player-time { font-size: 11px; color: var(--muted); }
 
@@ -881,6 +897,7 @@
         <div class="waveform" id="${wfId}" onclick="togglePlay('${song.id}','${wfId}','${pbId}')"></div>
         <div class="player-row">
           <button class="play-btn" id="${pbId}" onclick="togglePlay('${song.id}','${wfId}','${pbId}')">▶</button>
+          <button class="restart-btn" onclick="restartPlay('${song.id}','${wfId}','${pbId}')" title="最初から再生">⏮</button>
           <div class="player-info"><div class="player-time" id="${ptId}">${song.duration}</div></div>
         </div>
         <audio id="${song.id}" src="${song.audio}"></audio>
@@ -984,6 +1001,27 @@
       audio.pause();
       animateBars(wfId, false);
     }
+  }
+
+  function restartPlay(audioId, wfId, btnId) {
+    const audio = document.getElementById(audioId);
+    const btn   = document.getElementById(btnId);
+
+    // 別の曲が再生中なら止める
+    if (currentPlaying && currentPlaying !== btnId) {
+      const prevBtn   = document.getElementById(currentPlaying);
+      const prevAudio = document.getElementById(currentPlaying.replace('pb','audio'));
+      if (prevBtn)   prevBtn.textContent = '▶';
+      if (prevAudio) { prevAudio.pause(); prevAudio.currentTime = 0; }
+      const prevWfId = prevBtn ? prevBtn.closest('.card').querySelector('.waveform').id : null;
+      if (prevWfId) animateBars(prevWfId, false);
+    }
+
+    audio.currentTime = 0;
+    audio.play();
+    btn.textContent = '⏸';
+    currentPlaying  = btnId;
+    animateBars(wfId, true);
   }
 
   function fmtTime(sec) {
