@@ -24,10 +24,6 @@ TYPE_OPTIONS = [
     ('one-of-a-kind', '一品物（限定1点）'),
     ('free',          'フリー（無料）'),
 ]
-LICENSE_OPTIONS = [
-    '配信OK', '収益化OK', 'ループ', 'YouTube収益化OK',
-    '商用可', 'SNS投稿OK', 'ゲーム内使用OK', 'アプリOK', '社内動画OK', '広告OK',
-]
 GRAD_PRESETS = [
     ('ダークパープル', 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)'),
     ('ダークティール', 'linear-gradient(135deg, #1c3a3a, #2d5a5a, #1a2e2e)'),
@@ -351,18 +347,6 @@ class SongDialog:
                 if colors: btn.configure(bg=colors[0])
             except: pass
 
-        # ライセンス
-        self._lbl(self.f, 'ライセンス表示', pad=p)
-        lic_frame = tk.Frame(self.f, bg='#F7F8FC')
-        lic_frame.pack(padx=20, fill='x')
-        self.lic_vars = {}
-        for i, opt in enumerate(LICENSE_OPTIONS):
-            var = tk.BooleanVar(value=opt in s.get('licenses',[]))
-            self.lic_vars[opt] = var
-            r, c = i // 2, i % 2
-            ttk.Checkbutton(lic_frame, text=opt, variable=var,
-                            style='TCheckbutton').grid(row=r, column=c, sticky='w', padx=4, pady=3)
-
         # ボタン
         btn_frame = tk.Frame(self.f, bg='#F7F8FC')
         btn_frame.pack(padx=20, pady=(20,16), fill='x')
@@ -405,7 +389,7 @@ class SongDialog:
             'jacketEmoji':    self.e_emoji.get().strip() or '🎵',
             'audio':          f'audio/{audio_file}' if audio_file else '',
             'youtube':        self.e_youtube.get().strip(),
-            'licenses':       [o for o, v in self.lic_vars.items() if v.get()],
+            'licenses':       self.song.get('licenses', []),
         }
         self.win.destroy()
 
