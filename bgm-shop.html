@@ -988,40 +988,34 @@
         return;
       }
 
-      // フリー
+      // フリー — <button> を本物の <a download> に差し替え
       if(isFree) {
-        btn.textContent = '無料DL';
-        btn.disabled = false;
+        const audioEl = card.querySelector('audio');
+        const src     = audioEl ? audioEl.getAttribute('src') : '';
+        const title   = (card.querySelector('.card-title')?.textContent || 'BGM').trim();
+
+        // 既に <a> に差し替え済みなら再取得、まだ <button> ならすり替える
+        let el = document.getElementById('buy-' + id);
+        if(el && el.tagName !== 'A') {
+          const a = document.createElement('a');
+          a.id        = el.id;
+          a.className = el.className;
+          a.textContent = '無料DL';
+          // クリック時に広告モーダルを表示（デフォルト動作＝DL はそのまま通す）
+          a.addEventListener('click', () => { showAdModal(); });
+          el.replaceWith(a);
+          el = a;
+        }
+
         if(url) {
-          btn.onclick = () => {
-            window.open(url, '_blank', 'noopener');
-            showAdModal();
-          };
+          el.href   = url;
+          el.target = '_blank';
+          el.rel    = 'noopener';
+          el.removeAttribute('download');
         } else {
-          const audioEl = card.querySelector('audio');
-          const src   = audioEl ? audioEl.getAttribute('src') : '';
-          const title = (card.querySelector('.card-title')?.textContent || 'BGM').trim();
-          btn.onclick = () => {
-            const ad = getRandomAd();
-            if (ad) {
-              // 広告あり：先にDL開始してからモーダル表示
-              const a = document.createElement('a');
-              a.href     = src;
-              a.download = title + '.mp3';
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
-              showAdModal();
-            } else {
-              // 広告なし：そのままDL
-              const a = document.createElement('a');
-              a.href     = src;
-              a.download = title + '.mp3';
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
-            }
-          };
+          el.href = src;
+          el.setAttribute('download', title + '.mp3');
+          el.removeAttribute('target');
         }
         return;
       }
