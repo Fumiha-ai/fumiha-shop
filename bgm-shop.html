@@ -598,78 +598,73 @@
   .ad-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.55);
+    background: rgba(0,0,0,0.72);
     z-index: 1000;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 16px;
     animation: fadeIn 0.2s ease;
   }
   .ad-modal-overlay.hidden { display: none; }
   @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 
+  .ad-modal-skip {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 6px;
+    height: 16px;
+    text-align: center;
+  }
+
   .ad-modal-box {
-    background: #fff;
-    border-radius: 16px;
-    padding: 32px;
-    max-width: 520px;
-    width: 100%;
     position: relative;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.25);
+    max-width: 720px;
+    width: 100%;
     animation: slideUp 0.25s ease;
   }
-  @keyframes slideUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes slideUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
 
+  /* ×ボタン：広告上端中央に重なる */
   .ad-modal-close {
     position: absolute;
-    top: 10px; right: 12px;
-    width: 22px; height: 22px;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    width: 26px; height: 26px;
     border-radius: 50%;
-    border: none;
-    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.55);
+    background: rgba(30,30,30,0.82);
+    color: rgba(255,255,255,0.8);
     font-size: 11px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ccc;
-    transition: color 0.15s;
     opacity: 0;
     pointer-events: none;
+    transition: opacity 0.2s;
   }
   .ad-modal-close.visible {
     opacity: 1;
     pointer-events: auto;
   }
-  .ad-modal-close:hover { color: #999; }
 
-  .ad-modal-skip {
-    text-align: right;
-    font-size: 11px;
-    color: #ccc;
-    margin-bottom: 12px;
-    height: 16px;
-  }
-
-  .ad-modal-label {
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-weight: 700;
-    margin-bottom: 16px;
-    text-align: center;
-  }
   .ad-modal-content {
+    width: 100%;
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
   }
+  .ad-modal-content img,
+  .ad-modal-content a img { max-width: 100%; display: block; }
+
   .ad-modal-note {
     text-align: center;
-    font-size: 12px;
-    color: var(--muted);
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    margin-top: 8px;
   }
 </style>
 </head>
@@ -677,13 +672,12 @@
 
 <!-- 広告モーダル -->
 <div class="ad-modal-overlay hidden" id="ad-modal">
+  <div class="ad-modal-skip" id="ad-modal-skip"></div>
   <div class="ad-modal-box">
     <button class="ad-modal-close" id="ad-modal-close">✕</button>
-    <div class="ad-modal-skip" id="ad-modal-skip"></div>
-    <div class="ad-modal-label">Sponsored</div>
     <div class="ad-modal-content" id="ad-modal-ad"></div>
-    <div class="ad-modal-note">広告を閉じるとダウンロードが始まります</div>
   </div>
+  <div class="ad-modal-note">広告を閉じるとダウンロードが始まります</div>
 </div>
 
 <header>
