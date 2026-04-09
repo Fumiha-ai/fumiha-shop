@@ -2,7 +2,7 @@
 cd /d "%~dp0"
 
 echo ================================
-echo   NEONOTE BGM SHOP Deploy
+echo   Fumiha BGM SHOP Deploy
 echo ================================
 echo(
 

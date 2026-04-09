@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEONOTE 管理ページ</title>
+<title>ふみは BGM SHOP 管理ページ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -20,306 +20,142 @@
     --ng: #D94545;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 15px;
-    line-height: 1.7;
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', sans-serif; font-size: 15px; line-height: 1.7; }
 
-  /* ── ログイン画面 ── */
-  #login-screen {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .login-box {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 48px 40px;
-    width: 360px;
-    text-align: center;
-    box-shadow: 0 8px 32px rgba(74,108,247,0.08);
-  }
-  .login-box h1 {
-    font-family: 'Dela Gothic One', sans-serif;
-    font-size: 22px;
-    margin-bottom: 6px;
-  }
+  /* ── ログイン ── */
+  #login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+  .login-box { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 48px 40px; width: 360px; text-align: center; box-shadow: 0 8px 32px rgba(74,108,247,0.08); }
+  .login-box h1 { font-family: 'Dela Gothic One', sans-serif; font-size: 22px; margin-bottom: 6px; }
   .login-box p { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
-  .login-box input[type="password"] {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-size: 15px;
-    font-family: 'Noto Sans JP', sans-serif;
-    margin-bottom: 14px;
-    outline: none;
-    transition: border-color 0.15s;
-  }
+  .login-box input[type="password"] { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 15px; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 14px; outline: none; transition: border-color 0.15s; }
   .login-box input[type="password"]:focus { border-color: var(--accent); }
-  .login-box button {
-    width: 100%;
-    padding: 12px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 700;
-    font-family: 'Noto Sans JP', sans-serif;
-    cursor: pointer;
-    transition: opacity 0.15s;
-  }
-  .login-box button:hover { opacity: 0.85; }
-  .login-error {
-    margin-top: 12px;
-    font-size: 13px;
-    color: var(--ng);
-    display: none;
-  }
+  .login-box button { width: 100%; padding: 12px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; }
+  .login-error { margin-top: 12px; font-size: 13px; color: var(--ng); display: none; }
 
   /* ── 管理画面 ── */
   #admin-screen { display: none; }
+  header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .header-title { font-family: 'Dela Gothic One', sans-serif; font-size: 18px; }
+  .header-title span { font-size: 12px; font-family: 'Noto Sans JP', sans-serif; font-weight: 400; color: var(--muted); margin-left: 10px; }
+  .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
-  header {
-    background: var(--bg2);
-    border-bottom: 1px solid var(--border);
-    padding: 20px 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-  }
-  .header-title {
-    font-family: 'Dela Gothic One', sans-serif;
-    font-size: 18px;
-  }
-  .header-title span {
-    font-size: 12px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-weight: 400;
-    color: var(--muted);
-    margin-left: 10px;
-  }
-  .header-actions { display: flex; gap: 10px; align-items: center; }
-  .btn {
-    padding: 9px 20px;
-    border-radius: 999px;
-    border: none;
-    font-size: 13px;
-    font-weight: 700;
-    font-family: 'Noto Sans JP', sans-serif;
-    cursor: pointer;
-    transition: opacity 0.15s, transform 0.15s;
-  }
+  .btn { padding: 9px 18px; border-radius: 999px; border: none; font-size: 13px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; transition: opacity 0.15s; }
   .btn:hover { opacity: 0.85; }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-outline { background: var(--bg2); color: var(--text); border: 1.5px solid var(--border); }
-  .btn-logout  { background: var(--bg); color: var(--muted); border: 1.5px solid var(--border); font-size: 12px; padding: 7px 14px; }
-  .btn-sync    { background: #1A7A47; color: #fff; }
-  .btn-sync:disabled { background: #ccc; cursor: not-allowed; opacity: 0.7; }
+  .btn-primary  { background: var(--accent); color: #fff; }
+  .btn-outline  { background: var(--bg2); color: var(--text); border: 1.5px solid var(--border); }
+  .btn-green    { background: #1A7A47; color: #fff; }
+  .btn-orange   { background: #C25F00; color: #fff; }
+  .btn-danger   { background: var(--ng); color: #fff; }
+  .btn-logout   { background: var(--bg); color: var(--muted); border: 1.5px solid var(--border); font-size: 12px; padding: 7px 14px; }
+  .btn:disabled { background: #ccc; cursor: not-allowed; opacity: 0.7; }
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
 
-  /* 同期ステータス */
-  .sync-banner {
-    border-radius: 10px;
-    padding: 12px 20px;
-    font-size: 13px;
-    font-weight: 700;
-    margin-bottom: 28px;
-    display: none;
-    align-items: center;
-    gap: 8px;
-  }
-  .sync-banner.show { display: flex; }
-  .sync-banner.running { background: #EEF1FE; border: 1px solid #C5CEFB; color: var(--accent); }
-  .sync-banner.done    { background: #EDFAF3; border: 1px solid #9DE3BF; color: #1A7A47; }
-  .sync-banner.error   { background: #FEF2F2; border: 1px solid #FCA5A5; color: var(--ng); }
+  /* ── タブ ── */
+  .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); padding: 0 40px; background: var(--bg2); }
+  .tab-btn { padding: 14px 24px; font-size: 14px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; background: none; border: none; cursor: pointer; color: var(--muted); border-bottom: 3px solid transparent; margin-bottom: -2px; transition: color 0.15s; }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
 
-  /* 商品行の同期結果バッジ */
-  .sync-result {
-    font-size: 11px;
-    font-weight: 700;
-    border-radius: 4px;
-    padding: 2px 8px;
-    margin-left: 6px;
-  }
+  .main { max-width: 900px; margin: 0 auto; padding: 36px 40px; }
+
+  /* バナー共通 */
+  .banner { border-radius: 10px; padding: 12px 20px; font-size: 13px; font-weight: 700; margin-bottom: 24px; display: none; align-items: center; gap: 8px; }
+  .banner.show { display: flex; }
+  .banner-ok     { background: #EDFAF3; border: 1px solid #9DE3BF; color: #1A7A47; }
+  .banner-info   { background: #EEF1FE; border: 1px solid #C5CEFB; color: var(--accent); }
+  .banner-error  { background: #FEF2F2; border: 1px solid #FCA5A5; color: var(--ng); }
+
+  /* ── BOOTH管理タブ ── */
+  .product-list { display: flex; flex-direction: column; gap: 14px; }
+  .product-row { background: var(--bg2); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 18px 22px; display: grid; grid-template-columns: 72px 1fr auto; gap: 18px; align-items: center; }
+  .product-row[data-type="one-of-a-kind"] { border-color: #FFB74D; background: #FFFAF4; }
+  .product-row[data-type="regular"]       { border-color: #C5CEFB; background: #F5F7FF; }
+  .product-row[data-type="free"]          { border-color: #9DE3BF; background: #F3FBF7; }
+  .product-jacket { width: 72px; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #dde1f0; }
+  .product-jacket img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .product-info { min-width: 0; }
+  .product-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+  .product-name { font-family: 'Dela Gothic One', sans-serif; font-size: 15px; }
+  .type-badge { font-size: 11px; font-weight: 700; border-radius: 4px; padding: 2px 8px; }
+  .type-badge.one-of-a-kind { background: #FFF3E0; color: #C25F00; border: 1px solid #FFD59E; }
+  .type-badge.regular       { background: var(--accent-light); color: var(--accent); border: 1px solid #C5CEFB; }
+  .type-badge.free          { background: #EDFAF3; color: #1A7A47; border: 1px solid #9DE3BF; }
+  .url-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  .url-input { flex: 1; padding: 8px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; font-family: 'Noto Sans JP', sans-serif; outline: none; min-width: 0; background: #fff; }
+  .url-input:focus { border-color: var(--accent); }
+  .url-input.has-url { border-color: var(--ok); }
+  .url-input::placeholder { color: #bbb; }
+  .test-link { font-size: 12px; color: var(--accent); text-decoration: none; white-space: nowrap; font-weight: 700; padding: 4px 6px; border-radius: 4px; display: none; }
+  .test-link.show { display: inline; }
+  .soldout-area { text-align: center; flex-shrink: 0; }
+  .toggle-label { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); cursor: pointer; user-select: none; }
+  .toggle-label.disabled-area { opacity: 0.35; pointer-events: none; }
+  .toggle { position: relative; width: 42px; height: 24px; }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle-track { position: absolute; inset: 0; background: var(--border); border-radius: 999px; cursor: pointer; transition: background 0.2s; }
+  .toggle input:checked + .toggle-track { background: var(--ng); }
+  .toggle-track::after { content: ''; position: absolute; width: 18px; height: 18px; border-radius: 50%; background: #fff; top: 3px; left: 3px; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+  .toggle input:checked + .toggle-track::after { transform: translateX(18px); }
+  .sync-result { font-size: 11px; font-weight: 700; border-radius: 4px; padding: 2px 8px; margin-left: 4px; }
   .sync-result.checking { background: #EEF1FE; color: var(--accent); }
   .sync-result.in-stock { background: #EDFAF3; color: #1A7A47; }
   .sync-result.sold-out { background: #FFF3E0; color: #C25F00; }
   .sync-result.error    { background: #FEF2F2; color: var(--ng); }
 
-  .main { max-width: 900px; margin: 0 auto; padding: 40px; }
+  /* ── 曲管理タブ ── */
+  .song-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+  .song-list { display: flex; flex-direction: column; gap: 12px; }
+  .song-row { background: var(--bg2); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 16px 20px; display: grid; grid-template-columns: 80px 1fr auto; gap: 16px; align-items: center; }
+  .song-row[data-type="one-of-a-kind"] { border-color: #FFB74D; background: #FFFAF4; }
+  .song-row[data-type="regular"]       { border-color: #C5CEFB; background: #F5F7FF; }
+  .song-row[data-type="free"]          { border-color: #9DE3BF; background: #F3FBF7; }
+  .song-jacket { width: 80px; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; }
+  .song-jacket-inner { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+  .song-jacket img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .song-info { min-width: 0; }
+  .song-title { font-family: 'Dela Gothic One', sans-serif; font-size: 15px; margin-bottom: 3px; }
+  .song-meta  { font-size: 12px; color: var(--muted); }
+  .song-actions { display: flex; gap: 6px; flex-shrink: 0; }
 
-  .save-banner {
-    background: #EDFAF3;
-    border: 1px solid #9DE3BF;
-    border-radius: 10px;
-    padding: 12px 20px;
-    font-size: 13px;
-    color: #1A7A47;
-    font-weight: 700;
-    margin-bottom: 28px;
-    display: none;
-    align-items: center;
-    gap: 8px;
-  }
-  .save-banner.show { display: flex; }
-
-  /* ── 商品リスト ── */
-  .product-list { display: flex; flex-direction: column; gap: 16px; }
-
-  .product-row {
-    background: var(--bg2);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px 24px;
-    display: grid;
-    grid-template-columns: 72px 1fr auto;
-    gap: 20px;
-    align-items: center;
-  }
-  .product-row[data-type="one-of-a-kind"] { border-color: #FFB74D; background: #FFFAF4; }
-  .product-row[data-type="regular"]        { border-color: #C5CEFB; background: #F5F7FF; }
-  .product-row[data-type="free"]           { border-color: #9DE3BF; background: #F3FBF7; }
-
-  .product-jacket {
-    width: 72px;
-    aspect-ratio: 16/9;
-    border-radius: 6px;
-    overflow: hidden;
-    background: #dde1f0;
-    flex-shrink: 0;
-  }
-  .product-jacket img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-  .product-info { min-width: 0; }
-  .product-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 4px;
-    flex-wrap: wrap;
-  }
-  .product-name {
-    font-family: 'Dela Gothic One', sans-serif;
-    font-size: 16px;
-  }
-  .type-badge {
-    font-size: 11px;
-    font-weight: 700;
-    border-radius: 4px;
-    padding: 2px 8px;
-  }
-  .type-badge.one-of-a-kind { background: #FFF3E0; color: #C25F00; border: 1px solid #FFD59E; }
-  .type-badge.regular        { background: var(--accent-light); color: var(--accent); border: 1px solid #C5CEFB; }
-  .type-badge.free           { background: #EDFAF3; color: #1A7A47; border: 1px solid #9DE3BF; }
-
-  .url-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 10px;
-  }
-  .url-input {
-    flex: 1;
-    padding: 9px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-size: 13px;
-    font-family: 'Noto Sans JP', sans-serif;
-    outline: none;
+  /* ── モーダル ── */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; display: none; align-items: flex-start; justify-content: center; padding: 40px 20px; overflow-y: auto; }
+  .modal-overlay.show { display: flex; }
+  .modal { background: var(--bg2); border-radius: var(--radius); width: 100%; max-width: 600px; padding: 36px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+  .modal-title { font-family: 'Dela Gothic One', sans-serif; font-size: 20px; margin-bottom: 24px; }
+  .form-row { margin-bottom: 18px; }
+  .form-label { display: block; font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+    font-size: 14px; font-family: 'Noto Sans JP', sans-serif; outline: none; background: #fff;
     transition: border-color 0.15s;
-    min-width: 0;
-    background: #fff;
   }
-  .url-input:focus { border-color: var(--accent); }
-  .url-input.has-url { border-color: var(--ok); }
-  .url-input::placeholder { color: #bbb; }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); }
+  .form-textarea { min-height: 80px; resize: vertical; }
+  .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
 
-  .test-link {
-    font-size: 12px;
-    color: var(--accent);
-    text-decoration: none;
-    white-space: nowrap;
-    font-weight: 700;
-    padding: 4px 6px;
-    border-radius: 4px;
-    display: none;
-  }
-  .test-link:hover { background: var(--accent-light); }
-  .test-link.show { display: inline; }
+  /* グラデーションプリセット */
+  .gradient-presets { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .grad-swatch { width: 36px; height: 36px; border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: transform 0.15s; flex-shrink: 0; }
+  .grad-swatch:hover { transform: scale(1.1); }
+  .grad-swatch.selected { border-color: var(--text); }
 
-  /* sold-out トグル */
-  .soldout-area { text-align: right; flex-shrink: 0; }
-  .toggle-label {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    color: var(--muted);
-    cursor: pointer;
-    user-select: none;
-  }
-  .toggle-label.disabled-area { opacity: 0.35; pointer-events: none; }
-  .toggle {
-    position: relative;
-    width: 42px;
-    height: 24px;
-  }
-  .toggle input { opacity: 0; width: 0; height: 0; }
-  .toggle-track {
-    position: absolute;
-    inset: 0;
-    background: var(--border);
-    border-radius: 999px;
-    transition: background 0.2s;
-    cursor: pointer;
-  }
-  .toggle input:checked + .toggle-track { background: var(--ng); }
-  .toggle-track::after {
-    content: '';
-    position: absolute;
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    background: #fff;
-    top: 3px; left: 3px;
-    transition: transform 0.2s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-  }
-  .toggle input:checked + .toggle-track::after { transform: translateX(18px); }
+  /* ライセンスチェックボックス */
+  .license-checks { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+  .lic-check-label { display: flex; align-items: center; gap: 5px; font-size: 13px; cursor: pointer; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px; user-select: none; }
+  .lic-check-label input { width: 14px; height: 14px; }
+  .lic-check-label:has(input:checked) { background: var(--accent-light); border-color: var(--accent); color: var(--accent); font-weight: 700; }
 
-  .status-dot {
-    display: inline-block;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    margin-right: 4px;
-  }
-  .status-dot.set   { background: var(--ok); }
-  .status-dot.unset { background: #ccc; }
-
-  /* ショップへのリンク */
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--muted);
-    font-size: 13px;
-    text-decoration: none;
-    margin-bottom: 28px;
-  }
-  .back-link:hover { color: var(--accent); }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 28px; }
 
   @media(max-width: 640px) {
-    header { padding: 16px 20px; }
+    header { padding: 14px 20px; }
+    .tabs { padding: 0 20px; }
     .main { padding: 24px 20px; }
-    .product-row { grid-template-columns: 56px 1fr; grid-template-rows: auto auto; }
-    .soldout-area { grid-column: 2; justify-self: end; }
+    .product-row, .song-row { grid-template-columns: 56px 1fr; }
+    .soldout-area, .song-actions { grid-column: 2; justify-self: end; }
+    .form-row-2 { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -329,7 +165,7 @@
 <div id="login-screen">
   <div class="login-box">
     <h1>管理者ログイン</h1>
-    <p>NEONOTE BGM SHOP 管理ページ</p>
+    <p>ふみは BGM SHOP 管理ページ</p>
     <input type="password" id="pw-input" placeholder="パスワードを入力" onkeydown="if(event.key==='Enter')doLogin()">
     <button onclick="doLogin()">ログイン</button>
     <div class="login-error" id="login-error">パスワードが違います</div>
@@ -339,253 +175,502 @@
 <!-- 管理画面 -->
 <div id="admin-screen">
   <header>
-    <div class="header-title">
-      管理ページ
-      <span>NEONOTE BGM SHOP</span>
-    </div>
+    <div class="header-title">管理ページ <span>ふみは BGM SHOP</span></div>
     <div class="header-actions">
       <a href="bgm-shop.html" target="_blank" class="btn btn-outline">ショップを見る ↗</a>
-      <button class="btn btn-sync" id="sync-btn" onclick="syncBooth()">🔄 BOOTHと同期</button>
-      <button class="btn btn-primary" onclick="saveAll()">すべて保存</button>
       <button class="btn btn-logout" onclick="doLogout()">ログアウト</button>
     </div>
   </header>
 
-  <div class="main">
-    <a href="bgm-shop.html" class="back-link">← ショップへ戻る</a>
+  <!-- タブ -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('booth')">BOOTH管理</button>
+    <button class="tab-btn" onclick="switchTab('songs')">曲管理</button>
+  </div>
 
-    <div class="save-banner" id="save-banner">✓ 保存しました</div>
-    <div class="sync-banner" id="sync-banner"></div>
+  <!-- BOOTH管理タブ -->
+  <div id="tab-booth" class="tab-panel active">
+    <div class="main">
+      <div class="banner banner-ok" id="save-banner">✓ 保存しました</div>
+      <div class="banner" id="sync-banner"></div>
+      <div style="display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;">
+        <button class="btn btn-green" id="sync-btn" onclick="syncBooth()">🔄 BOOTHと同期</button>
+        <button class="btn btn-primary" onclick="saveAll()">すべて保存</button>
+      </div>
+      <div class="product-list" id="product-list"></div>
+    </div>
+  </div>
 
-    <div class="product-list" id="product-list">
-      <!-- JSで生成 -->
+  <!-- 曲管理タブ -->
+  <div id="tab-songs" class="tab-panel">
+    <div class="main">
+      <div class="banner banner-ok"  id="songs-save-banner">✓ songs.jsをダウンロードしました。ファイルを差し替えてdeploy.batを実行してください。</div>
+      <div class="song-toolbar">
+        <button class="btn btn-primary" onclick="openAddModal()">＋ 新しい曲を追加</button>
+        <button class="btn btn-green"   onclick="exportSongsJs()">⬇ songs.jsを書き出す</button>
+      </div>
+      <div class="song-list" id="song-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 曲追加・編集モーダル -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">曲を追加</div>
+
+    <div class="form-row-2">
+      <div class="form-row">
+        <label class="form-label">曲タイトル *</label>
+        <input class="form-input" id="f-title" placeholder="例: Neon Lobby">
+      </div>
+      <div class="form-row">
+        <label class="form-label">再生時間</label>
+        <input class="form-input" id="f-duration" placeholder="例: 2:34">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">販売種別 *</label>
+      <select class="form-select" id="f-type">
+        <option value="regular">通常販売</option>
+        <option value="one-of-a-kind">一品物</option>
+        <option value="free">フリー（無料）</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">説明文 *</label>
+      <textarea class="form-textarea" id="f-desc" placeholder="曲の雰囲気や用途を簡単に説明"></textarea>
+    </div>
+
+    <div class="form-row-2">
+      <div class="form-row">
+        <label class="form-label">価格（円）</label>
+        <input class="form-input" id="f-price" type="number" min="0" placeholder="例: 500（無料は0）">
+      </div>
+      <div class="form-row">
+        <label class="form-label">絵文字（ジャケット用）</label>
+        <input class="form-input" id="f-emoji" placeholder="例: 🎵">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">ジャケット画像ファイル名</label>
+      <input class="form-input" id="f-jacket" placeholder="例: my-song.jpg">
+      <div class="form-hint">images/ フォルダに置いたファイル名を入力</div>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">音声ファイル名</label>
+      <input class="form-input" id="f-audio" placeholder="例: my-song.mp3">
+      <div class="form-hint">audio/ フォルダに置いたファイル名を入力</div>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">ジャケット背景色</label>
+      <div class="gradient-presets" id="grad-presets"></div>
+      <input class="form-input" id="f-gradient" style="margin-top:8px" placeholder="linear-gradient(135deg, #111, #333)">
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">ライセンス表示</label>
+      <div class="license-checks" id="lic-checks"></div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">キャンセル</button>
+      <button class="btn btn-primary" onclick="saveSong()">保存</button>
     </div>
   </div>
 </div>
 
 <script src="songs.js"></script>
 <script>
-  // ── パスワード設定（ここを変更してください） ──
-  const ADMIN_PASSWORD = 'neonote2025';
+  // ── 設定 ──
+  const ADMIN_PASSWORD = '76727458';
 
-  // PRODUCTS は songs.js の SONGS を変換して使用
-  const PRODUCTS = SONGS.map(s => ({
-    id:    s.id,
-    name:  s.title,
-    genre: s.genreLabel,
-    type:  s.type,
-    jacket: s.jacket,
-    price: s.price === 0 ? '¥0' : `¥${s.price.toLocaleString()}`,
+  const TYPE_LABEL  = { 'one-of-a-kind': '一品物', regular: '通常', free: 'フリー' };
+
+  const GRAD_PRESETS = [
+    { label: 'ダークパープル', value: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)' },
+    { label: 'ダークティール', value: 'linear-gradient(135deg, #1c3a3a, #2d5a5a, #1a2e2e)' },
+    { label: 'オレンジ',       value: 'linear-gradient(135deg, #f7971e, #ffd200, #f7971e)' },
+    { label: 'グリーン',       value: 'linear-gradient(135deg, #56ab2f, #a8e063, #56ab2f)' },
+    { label: 'ダーク',         value: 'linear-gradient(135deg, #0a0a0a, #1a0533, #2d1b69)' },
+    { label: 'ブルー',         value: 'linear-gradient(135deg, #1a237e, #3949ab, #7986cb)' },
+    { label: 'ピンク',         value: 'linear-gradient(135deg, #f953c6, #b91d73)' },
+    { label: 'レッド',         value: 'linear-gradient(135deg, #f12711, #f5af19)' },
+  ];
+
+  const LICENSE_OPTIONS = ['配信OK','収益化OK','ループ','YouTube収益化OK','商用可','SNS投稿OK','ゲーム内使用OK','アプリOK','社内動画OK','広告OK'];
+
+  // ── ローカルストレージから曲リストを初期化 ──
+  function getSongList() {
+    try {
+      const stored = JSON.parse(localStorage.getItem('fumiha_songs'));
+      if(stored && stored.length) return stored;
+    } catch {}
+    // 初回：songs.jsのSONGSをそのままコピー
+    return JSON.parse(JSON.stringify(SONGS));
+  }
+  function saveSongList(list) {
+    localStorage.setItem('fumiha_songs', JSON.stringify(list));
+  }
+
+  // BOOTH管理用
+  const PRODUCTS = getSongList().map(s => ({
+    id: s.id, name: s.title,
+    type: s.type, jacket: s.jacket,
+    price: s.price === 0 ? '¥0' : `¥${Number(s.price).toLocaleString()}`,
   }));
-
-  const TYPE_LABEL = {
-    'one-of-a-kind': '🔶 一品物',
-    'regular':        '📦 通常',
-    'free':           '🎁 フリー',
-  };
 
   // ── ログイン ──
   function doLogin() {
-    const val = document.getElementById('pw-input').value;
-    if(val === ADMIN_PASSWORD) {
+    if(document.getElementById('pw-input').value === ADMIN_PASSWORD) {
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('admin-screen').style.display = 'block';
+      // まずlocalStorageで即時描画
       renderProducts();
+      renderSongList();
+      // バックグラウンドでサーバーから最新データを取得して更新
+      fetch('/.netlify/functions/products')
+        .then(r => r.json())
+        .then(data => {
+          if (Object.keys(data).length > 0) {
+            localStorage.setItem('fumiha_products', JSON.stringify(data));
+            renderProducts();
+          }
+        })
+        .catch(() => {});
     } else {
       document.getElementById('login-error').style.display = 'block';
       document.getElementById('pw-input').value = '';
     }
   }
-
   function doLogout() {
     document.getElementById('admin-screen').style.display = 'none';
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('pw-input').value = '';
   }
 
-  // ── 商品リスト描画 ──
+  // ── タブ切り替え ──
+  function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', ['booth','songs'][i] === name));
+    document.getElementById('tab-booth').classList.toggle('active', name === 'booth');
+    document.getElementById('tab-songs').classList.toggle('active', name === 'songs');
+  }
+
+  // ════════════════════════════════
+  // BOOTH管理タブ
+  // ════════════════════════════════
+  function getSaved() {
+    try { return JSON.parse(localStorage.getItem('fumiha_products')) || {}; } catch { return {}; }
+  }
+
   function renderProducts() {
     const saved = getSaved();
     const list  = document.getElementById('product-list');
     list.innerHTML = '';
-
     PRODUCTS.forEach(p => {
-      const data     = saved[p.id] || {};
-      const url      = data.boothUrl  || '';
-      const soldOut  = data.soldOut   || false;
-      const hasUrl   = url.length > 0;
-      const isOneOf  = p.type === 'one-of-a-kind';
-      const isFree   = p.type === 'free';
-
+      const data   = saved[p.id] || {};
+      const url    = data.boothUrl || '';
+      const soldOut= data.soldOut  || false;
+      const hasUrl = url.length > 0;
+      const isOneOf= p.type === 'one-of-a-kind';
+      const isFree = p.type === 'free';
       const row = document.createElement('div');
       row.className = 'product-row';
       row.dataset.type = p.type;
       row.dataset.id   = p.id;
-
       row.innerHTML = `
-        <div class="product-jacket">
-          <img src="${p.jacket}" onerror="this.style.display='none'" alt="${p.name}">
-        </div>
+        <div class="product-jacket"><img src="${p.jacket}" onerror="this.style.display='none'" alt="${p.name}"></div>
         <div class="product-info">
           <div class="product-meta">
             <span class="product-name">${p.name}</span>
             <span class="type-badge ${p.type}">${TYPE_LABEL[p.type]}</span>
-            <span style="font-size:12px;color:var(--muted)">${p.genre} · ${p.price}</span>
+            <span style="font-size:12px;color:var(--muted)">${p.price}</span>
           </div>
           <div class="url-row">
             <span style="font-size:12px;color:var(--muted);white-space:nowrap">BOOTH URL</span>
-            <input
-              class="url-input ${hasUrl ? 'has-url' : ''} ${isFree ? 'disabled-input' : ''}"
-              id="url-${p.id}"
-              type="url"
-              placeholder="${isFree ? '無料DLのためURLは不要' : 'https://xxxxx.booth.pm/items/xxxxxxx'}"
-              value="${url}"
-              ${isFree ? 'disabled' : ''}
-              oninput="onUrlInput('${p.id}')"
-            >
-            <a class="test-link ${hasUrl && !isFree ? 'show' : ''}" id="test-${p.id}" href="${url}" target="_blank" rel="noopener">確認 ↗</a>
+            <input class="url-input ${hasUrl?'has-url':''}" id="url-${p.id}" type="url"
+              placeholder="${isFree?'無料DLのためURLは不要':'https://xxxxx.booth.pm/items/xxxxxxx'}"
+              value="${url}" ${isFree?'disabled':''} oninput="onUrlInput('${p.id}')">
+            <a class="test-link ${hasUrl&&!isFree?'show':''}" id="test-${p.id}" href="${url}" target="_blank" rel="noopener">確認 ↗</a>
           </div>
-          <div style="margin-top:6px;font-size:12px;color:${hasUrl || isFree ? 'var(--ok)' : 'var(--muted)'}">
-            <span class="status-dot ${hasUrl || isFree ? 'set' : 'unset'}"></span>
-            ${isFree ? '無料DL（URLなし）' : hasUrl ? 'URL設定済み' : '未設定'}
+          <div style="margin-top:5px;font-size:12px;color:${hasUrl||isFree?'var(--ok)':'var(--muted)'}">
+            ${isFree?'無料DL（URLなし）':hasUrl?'✓ URL設定済み':'未設定'}
           </div>
         </div>
         <div class="soldout-area">
-          <label class="toggle-label ${!isOneOf ? 'disabled-area' : ''}">
+          <label class="toggle-label ${!isOneOf?'disabled-area':''}">
             <span>SOLD OUT</span>
             <span class="toggle">
-              <input type="checkbox" id="sold-${p.id}" ${soldOut ? 'checked' : ''} ${!isOneOf ? 'disabled' : ''} onchange="onSoldChange('${p.id}')">
+              <input type="checkbox" id="sold-${p.id}" ${soldOut?'checked':''} ${!isOneOf?'disabled':''}>
               <span class="toggle-track"></span>
             </span>
-            ${isOneOf ? '' : '<span style="font-size:10px">一品物のみ</span>'}
+            ${isOneOf?'':'<span style="font-size:10px">一品物のみ</span>'}
           </label>
-        </div>
-      `;
+        </div>`;
       list.appendChild(row);
     });
   }
 
-  // ── URL入力時 ──
   function onUrlInput(id) {
-    const input   = document.getElementById('url-' + id);
-    const testBtn = document.getElementById('test-' + id);
-    const hasUrl  = input.value.trim().length > 0;
+    const input  = document.getElementById('url-'+id);
+    const test   = document.getElementById('test-'+id);
+    const hasUrl = input.value.trim().length > 0;
     input.classList.toggle('has-url', hasUrl);
-    testBtn.classList.toggle('show', hasUrl);
-    if(hasUrl) testBtn.href = input.value.trim();
+    test.classList.toggle('show', hasUrl);
+    if(hasUrl) test.href = input.value.trim();
   }
 
-  function onSoldChange(id) {}
-
-  // ── 保存 ──
   function saveAll() {
     const saved = getSaved();
     PRODUCTS.forEach(p => {
-      const urlEl  = document.getElementById('url-' + p.id);
-      const soldEl = document.getElementById('sold-' + p.id);
-      saved[p.id] = {
-        boothUrl: urlEl  ? urlEl.value.trim()   : '',
-        soldOut:  soldEl ? soldEl.checked        : false,
-      };
+      const urlEl  = document.getElementById('url-'+p.id);
+      const soldEl = document.getElementById('sold-'+p.id);
+      saved[p.id] = { boothUrl: urlEl?urlEl.value.trim():'', soldOut: soldEl?soldEl.checked:false };
     });
-    localStorage.setItem('neonote_products', JSON.stringify(saved));
+    localStorage.setItem('fumiha_products', JSON.stringify(saved));
+    // サーバー（Netlify Blobs）にも保存して全訪問者に反映
+    fetch('/.netlify/functions/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ products: saved }),
+    }).catch(() => {});
     renderProducts();
-    const banner = document.getElementById('save-banner');
-    banner.classList.add('show');
-    setTimeout(() => banner.classList.remove('show'), 3000);
+    showBanner('save-banner','banner-ok');
   }
 
-  function getSaved() {
-    try { return JSON.parse(localStorage.getItem('neonote_products')) || {}; }
-    catch { return {}; }
-  }
-
-  // ── BOOTH在庫同期 ──
   async function syncBooth() {
-    const syncBtn    = document.getElementById('sync-btn');
-    const syncBanner = document.getElementById('sync-banner');
-    const saved      = getSaved();
-
-    // 一品物でURLが設定されているものだけ対象
-    const targets = PRODUCTS.filter(p =>
-      p.type === 'one-of-a-kind' && (saved[p.id]?.boothUrl || '').length > 0
-    );
-
-    if(targets.length === 0) {
-      showSyncBanner('error', '⚠ 一品物にBOOTH URLが設定されていません');
-      return;
-    }
-
-    syncBtn.disabled = true;
-    syncBtn.textContent = '確認中…';
-    showSyncBanner('running', `🔄 ${targets.length}件のBOOTH在庫を確認中…`);
-
-    // 各商品の同期結果バッジを「確認中」にする
-    targets.forEach(p => setSyncBadge(p.id, 'checking', '確認中…'));
-
-    let updatedCount = 0;
-    let errorCount   = 0;
-
+    const syncBtn = document.getElementById('sync-btn');
+    const saved   = getSaved();
+    const targets = PRODUCTS.filter(p => p.type==='one-of-a-kind' && (saved[p.id]?.boothUrl||'').length>0);
+    if(!targets.length) { showBanner('sync-banner','banner-error','⚠ 一品物にBOOTH URLが設定されていません'); return; }
+    syncBtn.disabled = true; syncBtn.textContent = '確認中…';
+    showBanner('sync-banner','banner-info',`🔄 ${targets.length}件確認中…`);
+    targets.forEach(p => setSyncBadge(p.id,'checking','確認中…'));
+    let updated=0, errors=0;
     await Promise.all(targets.map(async p => {
-      const url = saved[p.id].boothUrl;
       try {
-        const res  = await fetch(`/.netlify/functions/check-booth-stock?url=${encodeURIComponent(url)}`);
+        const res  = await fetch(`/.netlify/functions/check-booth-stock?url=${encodeURIComponent(saved[p.id].boothUrl)}`);
         const data = await res.json();
-
-        if(data.soldOut) {
-          saved[p.id].soldOut = true;
-          setSyncBadge(p.id, 'sold-out', '売り切れ');
-          updatedCount++;
-        } else {
-          setSyncBadge(p.id, 'in-stock', '在庫あり');
-        }
-      } catch {
-        setSyncBadge(p.id, 'error', 'エラー');
-        errorCount++;
-      }
+        if(data.soldOut){ saved[p.id].soldOut=true; setSyncBadge(p.id,'sold-out','売り切れ'); updated++; }
+        else setSyncBadge(p.id,'in-stock','在庫あり');
+      } catch { setSyncBadge(p.id,'error','エラー'); errors++; }
     }));
-
-    // localStorageに保存して画面を更新
-    localStorage.setItem('neonote_products', JSON.stringify(saved));
+    localStorage.setItem('fumiha_products', JSON.stringify(saved));
+    // 同期結果をサーバーにも反映
+    fetch('/.netlify/functions/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ products: saved }),
+    }).catch(() => {});
     renderProducts();
-
-    // 同期結果バッジを再表示（renderProductsで消えるため）
-    targets.forEach(p => {
-      const result = saved[p.id]?.soldOut ? 'sold-out' : 'in-stock';
-      const label  = saved[p.id]?.soldOut ? '売り切れ → SOLD OUT更新済' : '在庫あり';
-      setSyncBadge(p.id, result, label);
-    });
-
-    const msg = errorCount > 0
-      ? `⚠ ${targets.length}件中 ${errorCount}件エラー（${updatedCount}件更新）`
-      : `✓ ${targets.length}件確認完了 — ${updatedCount}件をSOLD OUTに更新しました`;
-    showSyncBanner(errorCount > 0 ? 'error' : 'done', msg);
-
-    syncBtn.disabled = false;
-    syncBtn.textContent = '🔄 BOOTHと同期';
+    targets.forEach(p => setSyncBadge(p.id, saved[p.id]?.soldOut?'sold-out':'in-stock', saved[p.id]?.soldOut?'SOLD OUT更新済':'在庫あり'));
+    showBanner('sync-banner', errors?'banner-error':'banner-ok', errors?`⚠ ${errors}件エラー`:`✓ ${targets.length}件確認 — ${updated}件更新`);
+    syncBtn.disabled=false; syncBtn.textContent='🔄 BOOTHと同期';
   }
 
   function setSyncBadge(id, type, label) {
-    // 商品行のメタ行に同期結果バッジを挿入
-    const row    = document.querySelector(`.product-row[data-id="${id}"]`);
+    const row = document.querySelector(`.product-row[data-id="${id}"]`);
     if(!row) return;
-    let badge    = row.querySelector('.sync-result');
-    if(!badge) {
-      badge = document.createElement('span');
-      badge.className = 'sync-result';
-      row.querySelector('.product-meta').appendChild(badge);
-    }
-    badge.className = `sync-result ${type}`;
-    badge.textContent = label;
+    let b = row.querySelector('.sync-result');
+    if(!b){ b=document.createElement('span'); b.className='sync-result'; row.querySelector('.product-meta').appendChild(b); }
+    b.className=`sync-result ${type}`; b.textContent=label;
   }
 
-  function showSyncBanner(type, msg) {
-    const banner = document.getElementById('sync-banner');
-    banner.className = `sync-banner show ${type}`;
-    banner.textContent = msg;
-    if(type === 'done') {
-      setTimeout(() => banner.classList.remove('show'), 5000);
+  // ════════════════════════════════
+  // 曲管理タブ
+  // ════════════════════════════════
+  function renderSongList() {
+    const songs = getSongList();
+    const list  = document.getElementById('song-list');
+    list.innerHTML = '';
+    songs.forEach((s, i) => {
+      const row = document.createElement('div');
+      row.className = 'song-row';
+      row.dataset.type = s.type;
+      const priceStr = s.price === 0 ? '無料' : `¥${Number(s.price).toLocaleString()}`;
+      row.innerHTML = `
+        <div class="song-jacket">
+          <div class="song-jacket-inner" style="background:${s.jacketGradient||'#dde1f0'}">
+            <img src="${s.jacket}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" style="width:100%;height:100%;object-fit:cover;display:block" alt="">
+            <span style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:22px">${s.jacketEmoji||'🎵'}</span>
+          </div>
+        </div>
+        <div class="song-info">
+          <div class="song-title">${s.title}</div>
+          <div class="song-meta">
+            <span class="type-badge ${s.type}" style="font-size:10px">${TYPE_LABEL[s.type]}</span>
+            &nbsp;${priceStr} · ${s.duration||'--'}
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">${s.description||''}</div>
+        </div>
+        <div class="song-actions">
+          <button class="btn btn-outline btn-sm" onclick="openEditModal(${i})">編集</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteSong(${i})">削除</button>
+        </div>`;
+      list.appendChild(row);
+    });
+  }
+
+  // ── モーダル ──
+  let editingIndex = -1;
+
+  function buildModalUI() {
+    // グラデーションプリセット
+    const presets = document.getElementById('grad-presets');
+    presets.innerHTML = '';
+    GRAD_PRESETS.forEach(g => {
+      const sw = document.createElement('div');
+      sw.className = 'grad-swatch';
+      sw.title = g.label;
+      sw.style.background = g.value;
+      sw.onclick = () => {
+        document.getElementById('f-gradient').value = g.value;
+        presets.querySelectorAll('.grad-swatch').forEach(s => s.classList.remove('selected'));
+        sw.classList.add('selected');
+      };
+      presets.appendChild(sw);
+    });
+    // ライセンスチェックボックス
+    const lic = document.getElementById('lic-checks');
+    lic.innerHTML = '';
+    LICENSE_OPTIONS.forEach(opt => {
+      const label = document.createElement('label');
+      label.className = 'lic-check-label';
+      label.innerHTML = `<input type="checkbox" value="${opt}"> ${opt}`;
+      lic.appendChild(label);
+    });
+  }
+
+  function openAddModal() {
+    editingIndex = -1;
+    buildModalUI();
+    document.getElementById('modal-title').textContent = '曲を追加';
+    document.getElementById('f-title').value    = '';
+    document.getElementById('f-duration').value = '';
+    document.getElementById('f-type').value     = 'regular';
+    document.getElementById('f-desc').value     = '';
+    document.getElementById('f-price').value    = '500';
+    document.getElementById('f-emoji').value    = '🎵';
+    document.getElementById('f-jacket').value   = '';
+    document.getElementById('f-audio').value    = '';
+    document.getElementById('f-gradient').value = GRAD_PRESETS[0].value;
+    document.getElementById('modal-overlay').classList.add('show');
+  }
+
+  function openEditModal(index) {
+    editingIndex = index;
+    buildModalUI();
+    const s = getSongList()[index];
+    document.getElementById('modal-title').textContent = '曲を編集';
+    document.getElementById('f-title').value    = s.title    || '';
+    document.getElementById('f-duration').value = s.duration || '';
+    document.getElementById('f-type').value     = s.type     || 'regular';
+    document.getElementById('f-desc').value     = s.description || '';
+    document.getElementById('f-price').value    = s.price    ?? 500;
+    document.getElementById('f-emoji').value    = s.jacketEmoji || '🎵';
+    document.getElementById('f-jacket').value   = (s.jacket||'').replace('images/','');
+    document.getElementById('f-audio').value    = (s.audio||'').replace('audio/','');
+    document.getElementById('f-gradient').value = s.jacketGradient || GRAD_PRESETS[0].value;
+    // ライセンスをチェック
+    document.querySelectorAll('#lic-checks input[type=checkbox]').forEach(cb => {
+      cb.checked = (s.licenses||[]).includes(cb.value);
+    });
+    document.getElementById('modal-overlay').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('show');
+  }
+
+  function saveSong() {
+    const title = document.getElementById('f-title').value.trim();
+    if(!title) { alert('曲タイトルを入力してください'); return; }
+
+    const jacketFile = document.getElementById('f-jacket').value.trim();
+    const audioFile  = document.getElementById('f-audio').value.trim();
+    const licenses   = [...document.querySelectorAll('#lic-checks input:checked')].map(c => c.value);
+
+    const song = {
+      id:             '',
+      title,
+      type:           document.getElementById('f-type').value,
+      description:    document.getElementById('f-desc').value.trim(),
+      price:          Number(document.getElementById('f-price').value) || 0,
+      duration:       document.getElementById('f-duration').value.trim() || '--:--',
+      jacket:         jacketFile ? `images/${jacketFile}` : '',
+      jacketGradient: document.getElementById('f-gradient').value.trim() || GRAD_PRESETS[0].value,
+      jacketEmoji:    document.getElementById('f-emoji').value.trim() || '🎵',
+      audio:          audioFile  ? `audio/${audioFile}`  : '',
+      licenses,
+    };
+
+    const songs = getSongList();
+    if(editingIndex >= 0) {
+      song.id = songs[editingIndex].id;
+      songs[editingIndex] = song;
+    } else {
+      // 新規IDを採番
+      const maxN = songs.reduce((m, s) => {
+        const n = parseInt(s.id.replace('audio','')) || 0;
+        return Math.max(m, n);
+      }, 0);
+      song.id = `audio${maxN + 1}`;
+      songs.push(song);
     }
+    saveSongList(songs);
+    renderSongList();
+    closeModal();
+  }
+
+  function deleteSong(index) {
+    const songs = getSongList();
+    if(!confirm(`「${songs[index].title}」を削除しますか？`)) return;
+    songs.splice(index, 1);
+    saveSongList(songs);
+    renderSongList();
+  }
+
+  // ── songs.js 書き出し ──
+  function exportSongsJs() {
+    const songs = getSongList();
+    const entries = songs.map(s => {
+      const lic = JSON.stringify(s.licenses || []);
+      return `  {
+    id:             '${s.id}',
+    title:          '${s.title}',
+    type:           '${s.type}',
+    description:    '${(s.description||'').replace(/'/g,"\\'")}',
+    price:          ${s.price || 0},
+    duration:       '${s.duration || '--:--'}',
+    jacket:         '${s.jacket || ''}',
+    jacketGradient: '${s.jacketGradient || ''}',
+    jacketEmoji:    '${s.jacketEmoji || '🎵'}',
+    audio:          '${s.audio || ''}',
+    licenses:       ${lic},
+  }`;
+    }).join(',\n');
+
+    const content = `const SONGS = [\n${entries},\n\n  // ↓ 新しい曲はここに追加 ↓\n];\n`;
+    const blob = new Blob([content], { type: 'text/javascript' });
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = 'songs.js';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    showBanner('songs-save-banner','banner-ok');
+  }
+
+  // ── バナー表示 ──
+  function showBanner(id, cls, msg) {
+    const b = document.getElementById(id);
+    b.className = `banner ${cls} show`;
+    if(msg) b.textContent = msg;
+    setTimeout(() => b.classList.remove('show'), 5000);
   }
 </script>
 </body>

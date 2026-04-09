@@ -1,17 +1,14 @@
 /**
- * NEONOTE BGM SHOP — 楽曲データ
+ * ふみは BGM SHOP — 楽曲データ
  *
  * 新しい曲を追加するときはこのファイルに追記するだけでOKです。
  *
- * genre:  'vtuber' | 'youtube' | 'game' | 'business'
  * type:   'one-of-a-kind' | 'regular' | 'free'
  */
 const SONGS = [
   {
     id:             'audio1',
     title:          'Neon Lobby',
-    genre:          'vtuber',
-    genreLabel:     '配信・Vtuber',
     type:           'one-of-a-kind',
     description:    '待機画面にぴったりな軽快なシンセポップ。ループ仕様で途切れなし。',
     price:          500,
@@ -25,8 +22,6 @@ const SONGS = [
   {
     id:             'audio2',
     title:          'Cozy Rain Café',
-    genre:          'vtuber',
-    genreLabel:     '配信・Vtuber',
     type:           'regular',
     description:    'ローファイチルのBGM。リラックス配信・作業配信向け。雨音ループ入り。',
     price:          500,
@@ -40,8 +35,6 @@ const SONGS = [
   {
     id:             'audio3',
     title:          'Spark Intro',
-    genre:          'youtube',
-    genreLabel:     '動画・YouTube',
     type:           'regular',
     description:    'オープニング・イントロに最適な元気系ポップ。テンション上げる30秒版も付属。',
     price:          800,
@@ -55,8 +48,6 @@ const SONGS = [
   {
     id:             'audio4',
     title:          'Daily Vlog Drive',
-    genre:          'youtube',
-    genreLabel:     '動画・YouTube',
     type:           'free',
     description:    'Vlog・日常動画向けのアコースティックポップ。明るくさりげなく。',
     price:          0,
@@ -70,8 +61,6 @@ const SONGS = [
   {
     id:             'audio5',
     title:          'Dungeon Echo',
-    genre:          'game',
-    genreLabel:     'ゲーム・アプリ',
     type:           'one-of-a-kind',
     description:    'ダンジョン探索系RPGに合うオーケストラ×エレクトロ。シームレスループ。',
     price:          1200,
@@ -85,8 +74,6 @@ const SONGS = [
   {
     id:             'audio6',
     title:          'Clarity Pulse',
-    genre:          'business',
-    genreLabel:     'ビジネス',
     type:           'regular',
     description:    'プレゼン・企業VP・展示会向けのクリーンなコーポレートBGM。',
     price:          1500,
@@ -102,8 +89,6 @@ const SONGS = [
   // {
   //   id:             'audio7',
   //   title:          '曲タイトル',
-  //   genre:          'vtuber',        // vtuber / youtube / game / business
-  //   genreLabel:     '配信・Vtuber',
   //   type:           'regular',       // one-of-a-kind / regular / free
   //   description:    '説明文',
   //   price:          500,

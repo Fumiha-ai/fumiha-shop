@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEONOTE BGM SHOP — Suno制作BGM販売</title>
+<title>ふみは BGM SHOP — ロイヤリティフリーBGM販売</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -389,7 +389,44 @@
   }
   .stat-label { font-size: 12px; color: var(--muted); letter-spacing: 1px; }
 
-  /* ── License section ── */
+  /* ── License accordion ── */
+  .license-accordion {
+    max-width: 680px;
+    margin: 24px auto 32px;
+    padding: 0 40px;
+  }
+  .license-tab {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+    transition: background .18s;
+    letter-spacing: .03em;
+  }
+  .license-tab:hover { background: #ECEEF8; }
+  .license-tab[aria-expanded="true"] {
+    border-radius: 10px 10px 0 0;
+    border-bottom-color: transparent;
+  }
+  .license-tab-arrow { transition: transform .2s; font-style: normal; }
+  .license-tab[aria-expanded="true"] .license-tab-arrow { transform: rotate(180deg); }
+  .license-panel {
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    overflow: hidden;
+  }
+  .license-panel[hidden] { display: none; }
+
+  /* ── License section (unused, kept for compat) ── */
   .section {
     max-width: 640px;
     margin: 0 auto 80px;
@@ -520,6 +557,22 @@
   }
   .buy-btn.free-btn:hover { opacity: 0.85; }
 
+  /* Detail link */
+  .detail-link {
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    color: var(--muted);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .detail-link:hover { border-color: var(--accent); color: var(--accent); }
+
   /* Sale type filter */
   .filter-bar .filter-btn[data-type] { }
   .filter-btn[data-type="one-of-a-kind"].active { background: #C25F00; border-color: #C25F00; }
@@ -538,50 +591,49 @@
     .grid { padding: 0 20px 60px; }
     .stats-bar { gap: 24px; padding: 28px 20px; }
     .section { padding: 0 20px; }
+    .license-accordion { padding: 0 20px; }
   }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo-badge"><div class="logo-badge-inner">BGM SHOP by NEONOTE</div></div>
-  <h1>NEONOTE<br>BGM SHOP</h1>
-  <p class="subtitle">配信・動画・ゲーム・ビジネスに使えるロイヤリティフリーBGM。<br>全曲Sunoで制作。即時ダウンロード販売。</p>
+  <div class="logo-badge"><div class="logo-badge-inner">BGM SHOP by Fumiha</div></div>
+  <h1>ふみは<br>BGM SHOP</h1>
+  <p class="subtitle">Vtuber活動・配信・動画・ゲーム・ビジネスに使える<br>ロイヤリティフリーBGMです！</p>
 </header>
 
-
-
-<div class="filter-bar">
-  <button class="filter-btn active" data-genre="all" onclick="filterCards('all')">すべて</button>
-  <button class="filter-btn" data-genre="vtuber" onclick="filterCards('vtuber')">🎙 配信・Vtuber</button>
-  <button class="filter-btn" data-genre="youtube" onclick="filterCards('youtube')">▶ 動画・YouTube</button>
-  <button class="filter-btn" data-genre="game" onclick="filterCards('game')">🎮 ゲーム・アプリ</button>
-  <button class="filter-btn" data-genre="business" onclick="filterCards('business')">💼 ビジネス</button>
+<!-- License accordion -->
+<div class="license-accordion">
+  <button class="license-tab" onclick="toggleLicense(this)" aria-expanded="false">
+    ライセンスについて
+    <span class="license-tab-arrow">▼</span>
+  </button>
+  <div class="license-panel" hidden>
+    <div class="license-list">
+      <div class="license-item"><span class="ok">✓</span><span class="lic-text">個人使用・非商用</span></div>
+      <div class="license-item"><span class="ok">✓</span><span class="lic-text">YouTube・配信収益化</span></div>
+      <div class="license-item"><span class="ok">✓</span><span class="lic-text">SNS投稿・動画編集</span></div>
+      <div class="license-item"><span class="ok">✓</span><span class="lic-text">ゲーム・アプリ組み込み（ゲーム用途のみ）</span></div>
+      <div class="license-item"><span class="ok">✓</span><span class="lic-text">商用広告・プロモ動画（ビジネス用途のみ）</span></div>
+      <div class="license-item"><span class="ng">×</span><span class="lic-text">再配布・再販売は禁止</span></div>
+    </div>
+  </div>
 </div>
+
+
+
 <div class="filter-bar" style="padding-top:0; padding-bottom:32px;">
   <button class="filter-btn active" data-type="all" onclick="filterByType('all')">全種別</button>
-  <button class="filter-btn" data-type="one-of-a-kind" onclick="filterByType('one-of-a-kind')">🔶 一品物</button>
-  <button class="filter-btn" data-type="regular" onclick="filterByType('regular')">📦 通常</button>
-  <button class="filter-btn" data-type="free" onclick="filterByType('free')">🎁 フリー</button>
+  <button class="filter-btn" data-type="one-of-a-kind" onclick="filterByType('one-of-a-kind')">一品物</button>
+  <button class="filter-btn" data-type="regular" onclick="filterByType('regular')">通常</button>
+  <button class="filter-btn" data-type="free" onclick="filterByType('free')">フリー</button>
 </div>
 
 <div class="grid" id="songs-grid"></div>
 
-<!-- License section -->
-<div class="section">
-  <div class="section-title">ライセンスについて</div>
-  <div class="license-list">
-    <div class="license-item"><span class="ok">✓</span><span class="lic-text">個人使用・非商用</span></div>
-    <div class="license-item"><span class="ok">✓</span><span class="lic-text">YouTube・配信収益化</span></div>
-    <div class="license-item"><span class="ok">✓</span><span class="lic-text">SNS投稿・動画編集</span></div>
-    <div class="license-item"><span class="ok">✓</span><span class="lic-text">ゲーム・アプリ組み込み（ゲーム用途のみ）</span></div>
-    <div class="license-item"><span class="ok">✓</span><span class="lic-text">商用広告・プロモ動画（ビジネス用途のみ）</span></div>
-    <div class="license-item"><span class="ng">×</span><span class="lic-text">再配布・再販売は禁止</span></div>
-  </div>
-</div>
-
 <footer>
-  <p>© 2025 NEONOTE BGM SHOP — All BGM produced with Suno AI</p>
+  <p>© 2025 ふみは BGM SHOP — All BGM produced with Suno AI</p>
   <p style="margin-top:6px">ご質問は <a href="/cdn-cgi/l/email-protection#5f3c30312b3e3c2b1f3a273e322f333a713c3032" style="color:var(--accent)"><span class="__cf_email__" data-cfemail="5a3935342e3b392e1a3f223b372a363f74393537">[email&#160;protected]</span></a> まで</p>
 </footer>
 
@@ -590,9 +642,9 @@
   // ── songs.jsからカードを生成 ──
   (function renderSongs() {
     const BADGE = {
-      'one-of-a-kind': '🔶 一品物 · 限定1点',
-      'regular':        '📦 通常販売',
-      'free':           '🎁 フリー · 無料DL',
+      'one-of-a-kind': '一品物 · 限定1点',
+      'regular':        '通常販売',
+      'free':           'フリー · 無料DL',
     };
     const grid = document.getElementById('songs-grid');
     SONGS.forEach((song, i) => {
@@ -613,17 +665,17 @@
 
       const card = document.createElement('div');
       card.className = 'card';
-      card.dataset.genre = song.genre;
       card.dataset.type  = song.type;
       card.style.animationDelay = `${i * 0.05}s`;
       card.innerHTML = `
-        <div class="card-jacket" style="--jacket-color:${song.jacketGradient}">
-          <img src="${song.jacket}" alt="${song.title}" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
-          <div class="jacket-placeholder">${song.jacketEmoji}</div>
-        </div>
-        <span class="card-tag">${song.genreLabel}</span>
+        <a href="song.html?id=${song.id}" style="display:block;text-decoration:none;color:inherit;">
+          <div class="card-jacket" style="--jacket-color:${song.jacketGradient}">
+            <img src="${song.jacket}" alt="${song.title}" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+            <div class="jacket-placeholder">${song.jacketEmoji}</div>
+          </div>
+        </a>
         <div class="sale-badge ${song.type}">${BADGE[song.type]}</div>
-        <div class="card-title">${song.title}</div>
+        <a href="song.html?id=${song.id}" style="text-decoration:none;color:inherit;"><div class="card-title">${song.title}</div></a>
         <div class="card-desc">${song.description}</div>
         <div class="waveform" id="${wfId}" onclick="togglePlay('${song.id}','${wfId}','${pbId}')"></div>
         <div class="player-row">
@@ -633,13 +685,16 @@
         <audio id="${song.id}" src="${song.audio}"></audio>
         <div class="volume-row">
           <span class="volume-icon" onclick="toggleMute('${song.id}','${volId}','${vnumId}')">🔊</span>
-          <input class="volume-slider" id="${volId}" type="range" min="0" max="100" value="50" oninput="setVolume('${song.id}','${volId}','${vnumId}')">
-          <span class="volume-num" id="${vnumId}">50</span>
+          <input class="volume-slider" id="${volId}" type="range" min="0" max="100" value="30" oninput="setVolume('${song.id}','${volId}','${vnumId}')">
+          <span class="volume-num" id="${vnumId}">30</span>
         </div>
         <div class="license-row">${licenses}</div>
         <div class="buy-row">
           <div class="price">${priceHtml}</div>
-          <button class="${buyClass}" id="${buyId}">${buyText}</button>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <a href="song.html?id=${song.id}" class="detail-link">詳細</a>
+            <button class="${buyClass}" id="${buyId}">${buyText}</button>
+          </div>
         </div>`;
       grid.appendChild(card);
     });
@@ -657,27 +712,22 @@
     }
   });
 
-  // ジャンルフィルター
-  let activeGenre = 'all';
-  let activeType  = 'all';
+  // 販売種別フィルター
+  let activeType = 'all';
 
   function applyFilters() {
     document.querySelectorAll('.card').forEach(c => {
-      const genreMatch = activeGenre === 'all' || c.dataset.genre === activeGenre;
-      const typeMatch  = activeType  === 'all' || c.dataset.type  === activeType;
-      c.classList.toggle('hidden', !(genreMatch && typeMatch));
+      const typeMatch = activeType === 'all' || c.dataset.type === activeType;
+      c.classList.toggle('hidden', !typeMatch);
     });
   }
 
-  function filterCards(genre) {
-    activeGenre = genre;
-    document.querySelectorAll('.filter-btn[data-genre]').forEach(b => {
-      b.classList.toggle('active', b.dataset.genre === genre);
-    });
-    applyFilters();
+  function toggleLicense(btn) {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!expanded));
+    btn.nextElementSibling.hidden = expanded;
   }
 
-  // 販売種別フィルター
   function filterByType(type) {
     activeType = type;
     document.querySelectorAll('.filter-btn[data-type]').forEach(b => {
@@ -831,7 +881,7 @@
   // ── 管理ページのlocalStorageを読み取り購入ボタンを設定 ──
   function applyProductSettings() {
     let saved = {};
-    try { saved = JSON.parse(localStorage.getItem('neonote_products')) || {}; } catch {}
+    try { saved = JSON.parse(localStorage.getItem('fumiha_products')) || {}; } catch {}
 
     document.querySelectorAll('.card').forEach(card => {
       // card の audio id を特定（audio1〜audio6）
@@ -884,7 +934,25 @@
     });
   }
 
-  applyProductSettings();
+  // ── ページ読み込み時にサーバーから最新データを取得して反映 ──
+  async function initShop() {
+    // まずlocalStorageで即時描画（フォールバック）
+    applyProductSettings();
+    try {
+      const res = await fetch('/.netlify/functions/products');
+      if (res.ok) {
+        const data = await res.json();
+        if (Object.keys(data).length > 0) {
+          // サーバーデータでlocalStorageを更新してから再描画
+          localStorage.setItem('fumiha_products', JSON.stringify(data));
+          applyProductSettings();
+        }
+      }
+    } catch {
+      // functionが使えない環境（ローカルファイル開き等）はlocalStorageのまま
+    }
+  }
+  initShop();
 </script>
 </body>
 </html>
