@@ -17,6 +17,7 @@ const SONGS = [
     jacketGradient: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)',
     jacketEmoji:    '🎙',
     audio:          'audio/neon-lobby.mp3',
+    youtube:        'https://www.youtube.com/watch?v=dQw4w9WgXcQ', // YouTubeリンクを入力
     licenses:       ['配信OK', '収益化OK', 'ループ'],
   },
   {
@@ -97,6 +98,7 @@ const SONGS = [
   //   jacketGradient: 'linear-gradient(135deg, #111, #333)',
   //   jacketEmoji:    '🎵',
   //   audio:          'audio/ファイル名.mp3',
+  //   youtube:        'https://www.youtube.com/watch?v=XXXXXXXXXXX', // 任意: YouTubeリンクがあれば
   //   licenses:       ['配信OK', '収益化OK'],
   // },
 ];

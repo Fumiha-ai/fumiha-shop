@@ -722,6 +722,13 @@
 
 <script src="songs.js"></script>
 <script>
+  // YouTube URLからビデオIDを取得
+  function getYouTubeId(url) {
+    if (!url) return null;
+    const m = url.match(/(?:youtu\.be\/|[?&]v=)([\w-]{11})/);
+    return m ? m[1] : null;
+  }
+
   // ── songs.jsからカードを生成 ──
   (function renderSongs() {
     const BADGE = {
@@ -750,13 +757,19 @@
       card.className = 'card';
       card.dataset.type  = song.type;
       card.style.animationDelay = `${i * 0.05}s`;
+      const ytId = getYouTubeId(song.youtube);
+      const jacketHtml = ytId
+        ? `<div class="card-jacket" style="--jacket-color:${song.jacketGradient}">
+            <iframe src="https://www.youtube.com/embed/${ytId}" title="${song.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>
+          </div>`
+        : `<a href="song.html?id=${song.id}" style="display:block;text-decoration:none;color:inherit;">
+            <div class="card-jacket" style="--jacket-color:${song.jacketGradient}">
+              <img src="${song.jacket}" alt="${song.title}" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+              <div class="jacket-placeholder">${song.jacketEmoji}</div>
+            </div>
+          </a>`;
       card.innerHTML = `
-        <a href="song.html?id=${song.id}" style="display:block;text-decoration:none;color:inherit;">
-          <div class="card-jacket" style="--jacket-color:${song.jacketGradient}">
-            <img src="${song.jacket}" alt="${song.title}" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
-            <div class="jacket-placeholder">${song.jacketEmoji}</div>
-          </div>
-        </a>
+        ${jacketHtml}
         <div class="sale-badge ${song.type}">${BADGE[song.type]}</div>
         <a href="song.html?id=${song.id}" style="text-decoration:none;color:inherit;"><div class="card-title">${song.title}</div></a>
         <div class="card-desc">${song.description}</div>
