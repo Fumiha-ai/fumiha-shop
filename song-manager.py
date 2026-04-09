@@ -52,7 +52,7 @@ def parse_songs():
     for block in re.findall(r'\{([^{}]+?)\}', content, re.DOTALL):
         s = {}
         for key in ['id','title','type','description',
-                    'duration','jacket','jacketGradient','jacketEmoji','audio']:
+                    'duration','jacket','jacketGradient','jacketEmoji','audio','youtube']:
             m = re.search(rf'\b{key}:\s*[\'"]([^\'"]*)[\'"]', block)
             if m:
                 s[key] = m.group(1)
@@ -71,6 +71,8 @@ def write_songs(songs):
     for s in songs:
         lic  = ', '.join(f"'{l}'" for l in (s.get('licenses') or []))
         desc = (s.get('description') or '').replace("'", "\\'")
+        yt = s.get('youtube', '').strip()
+        yt_line = f"\n    youtube:        '{yt}'," if yt else ''
         entries.append(f"""  {{
     id:             '{s.get('id','')}',
     title:          '{s.get('title','')}',
@@ -81,7 +83,7 @@ def write_songs(songs):
     jacket:         '{s.get('jacket','')}',
     jacketGradient: '{s.get('jacketGradient','')}',
     jacketEmoji:    '{s.get('jacketEmoji','🎵')}',
-    audio:          '{s.get('audio','')}',
+    audio:          '{s.get('audio','')}',{yt_line}
     licenses:       [{lic}],
   }}""")
     content = ('const SONGS = [\n' + ',\n'.join(entries) +
@@ -328,6 +330,10 @@ class SongDialog:
         self._lbl(rf4, '音声ファイル名（audio/）')
         self.e_audio  = self._entry(rf4, s.get('audio','').replace('audio/',''))
 
+        # YouTube URL
+        self._lbl(self.f, 'YouTube URL（任意 — あればジャケット部分に埋め込み表示）', pad=p)
+        self.e_youtube = self._entry(self.f, s.get('youtube',''))
+
         # グラデーション
         self._lbl(self.f, 'ジャケット背景グラデーション', pad=p)
         grad_frame = tk.Frame(self.f, bg='#F7F8FC')
@@ -398,6 +404,7 @@ class SongDialog:
             'jacketGradient': self.e_grad.get().strip(),
             'jacketEmoji':    self.e_emoji.get().strip() or '🎵',
             'audio':          f'audio/{audio_file}' if audio_file else '',
+            'youtube':        self.e_youtube.get().strip(),
             'licenses':       [o for o, v in self.lic_vars.items() if v.get()],
         }
         self.win.destroy()
