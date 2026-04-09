@@ -1102,6 +1102,7 @@
     const wf = document.getElementById(wfId);
     if(!wf) return;
     if(playing) {
+      clearInterval(animations[wfId]);
       animations[wfId] = setInterval(() => {
         wf.querySelectorAll('.wave-bar').forEach(bar => {
           bar.style.height = (8 + Math.random() * 24) + 'px';

@@ -750,6 +750,7 @@
   let animTimer = null;
   function animateBars(playing) {
     if (playing) {
+      clearInterval(animTimer);
       animTimer = setInterval(() => {
         wf.querySelectorAll('.wave-bar').forEach(b => {
           b.style.height = (8 + Math.random() * 24) + 'px';
