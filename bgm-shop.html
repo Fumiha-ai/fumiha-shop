@@ -1064,11 +1064,12 @@
       if (Array.isArray(stored)) _adCache = stored;
     } catch {}
     // バックグラウンドでサーバーから更新
+    // nullまたは空配列のときはlocalStorageを上書きしない（デプロイ後のリセット防止）
     try {
       const res = await fetch('/.netlify/functions/ads');
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data)) {
+        if (Array.isArray(data) && data.length > 0) {
           localStorage.setItem('fumiha_ads', JSON.stringify(data));
           _adCache = data;
         }

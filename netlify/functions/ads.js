@@ -35,10 +35,15 @@ exports.handler = async (event) => {
   }
 
   // ── GET: 広告リスト取得 ──
+  // stored が null = まだ一度も保存されていない → null を返してクライアントの
+  // localStorage を上書きしないようにする（[] との区別のため）
   let stored = null;
   try {
     stored = await store.get('data', { type: 'json' });
   } catch {}
 
-  return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify(stored?.ads || []) };
+  if (stored === null) {
+    return { statusCode: 200, headers: CORS_HEADERS, body: 'null' };
+  }
+  return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify(stored.ads ?? []) };
 };

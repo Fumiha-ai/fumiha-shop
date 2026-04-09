@@ -718,7 +718,7 @@
       const res = await fetch('/.netlify/functions/ads');
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data)) {
+        if (Array.isArray(data) && data.length > 0) {
           localStorage.setItem('fumiha_ads', JSON.stringify(data));
           _adCache = data;
         }
