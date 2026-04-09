@@ -1001,8 +1001,23 @@
           a.id        = el.id;
           a.className = el.className;
           a.textContent = '無料DL';
-          // クリック時に広告モーダルを表示（デフォルト動作＝DL はそのまま通す）
-          a.addEventListener('click', () => { showAdModal(); });
+          // クリック時：DLを止めてモーダルを表示、閉じたときにDL実行
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            _pendingHref     = a.href;
+            _pendingFilename = a.getAttribute('download') || '';
+            if (!showAdModal()) {
+              // 広告なし → 即DL
+              const dl = document.createElement('a');
+              dl.href     = _pendingHref;
+              dl.download = _pendingFilename;
+              document.body.appendChild(dl);
+              dl.click();
+              document.body.removeChild(dl);
+              _pendingHref = null;
+              _pendingFilename = null;
+            }
+          });
           el.replaceWith(a);
           el = a;
         }
@@ -1037,6 +1052,8 @@
 
   // ── 広告モーダル ──
   let _adCache = null;
+  let _pendingHref = null;
+  let _pendingFilename = null;
   const adModal      = document.getElementById('ad-modal');
   const adModalClose = document.getElementById('ad-modal-close');
 
@@ -1071,7 +1088,7 @@
 
   function showAdModal() {
     const ad = getRandomAd();
-    if (!ad) return;
+    if (!ad) return false;
     document.getElementById('ad-modal-ad').innerHTML = ad.html;
     adModalClose.classList.remove('visible');
     const skipEl = document.getElementById('ad-modal-skip');
@@ -1089,10 +1106,21 @@
       }
     }, 1000);
     adModal.classList.remove('hidden');
+    return true;
   }
   function closeAdModal() {
     clearInterval(_skipTimer);
     adModal.classList.add('hidden');
+    if (_pendingHref) {
+      const a = document.createElement('a');
+      a.href     = _pendingHref;
+      a.download = _pendingFilename || '';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      _pendingHref = null;
+      _pendingFilename = null;
+    }
   }
   adModalClose.addEventListener('click', closeAdModal);
   adModal.addEventListener('click', e => { if (e.target === adModal && adModalClose.classList.contains('visible')) closeAdModal(); });
