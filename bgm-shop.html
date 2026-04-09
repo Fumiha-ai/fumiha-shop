@@ -593,9 +593,87 @@
     .section { padding: 0 20px; }
     .license-accordion { padding: 0 20px; }
   }
+
+  /* ── 広告モーダル ── */
+  .ad-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.2s ease;
+  }
+  .ad-modal-overlay.hidden { display: none; }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+  .ad-modal-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 520px;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.25);
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+  .ad-modal-close {
+    position: absolute;
+    top: 12px; right: 14px;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: #eee;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    transition: background 0.15s;
+  }
+  .ad-modal-close:hover { background: #ddd; }
+
+  .ad-modal-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .ad-modal-content {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .ad-modal-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+  }
 </style>
 </head>
 <body>
+
+<!-- 広告モーダル -->
+<div class="ad-modal-overlay hidden" id="ad-modal">
+  <div class="ad-modal-box">
+    <button class="ad-modal-close" id="ad-modal-close">✕</button>
+    <div class="ad-modal-label">Sponsored</div>
+    <div class="ad-modal-content" id="ad-modal-ad">
+      <!-- ▼ ここにA8.netの広告コードを貼り付けてください ▼ -->
+
+      <!-- ▲ ここまで ▲ -->
+    </div>
+    <div class="ad-modal-note">広告を閉じるとダウンロードが始まります</div>
+  </div>
+</div>
 
 <header>
   <div class="logo-badge"><div class="logo-badge-inner">BGM SHOP by Fumiha</div></div>
@@ -910,20 +988,19 @@
         btn.textContent = '無料DL';
         btn.disabled = false;
         if(url) {
-          btn.onclick = () => window.open(url, '_blank', 'noopener');
+          btn.onclick = () => showAdModal(() => window.open(url, '_blank', 'noopener'));
         } else {
-          // サイトから直接ダウンロード
           const audioEl = card.querySelector('audio');
           const src = audioEl ? audioEl.getAttribute('src') : '';
           const title = card.querySelector('.card-title')?.textContent || 'BGM';
-          btn.onclick = () => {
+          btn.onclick = () => showAdModal(() => {
             const a = document.createElement('a');
             a.href = src;
             a.download = title + '.mp3';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-          };
+          });
         }
         return;
       }
@@ -942,6 +1019,63 @@
       }
     });
   }
+
+  // ── 広告モーダル ──
+  let _pendingDownload = null;
+  let _adCache = null;
+  const adModal      = document.getElementById('ad-modal');
+  const adModalClose = document.getElementById('ad-modal-close');
+
+  async function loadAds() {
+    // localStorage から即時取得
+    try {
+      const stored = JSON.parse(localStorage.getItem('fumiha_ads'));
+      if (Array.isArray(stored)) _adCache = stored;
+    } catch {}
+    // バックグラウンドでサーバーから更新
+    try {
+      const res = await fetch('/.netlify/functions/ads');
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          localStorage.setItem('fumiha_ads', JSON.stringify(data));
+          _adCache = data;
+        }
+      }
+    } catch {}
+  }
+
+  function getRandomAd() {
+    if (!_adCache) return null;
+    const enabled = _adCache.filter(a => a.enabled);
+    if (!enabled.length) return null;
+    return enabled[Math.floor(Math.random() * enabled.length)];
+  }
+
+  function showAdModal(downloadFn) {
+    _pendingDownload = downloadFn;
+    const ad = getRandomAd();
+    const adContent = document.getElementById('ad-modal-ad');
+    if (ad) {
+      adContent.innerHTML = ad.html;
+    } else {
+      // 広告未登録時は即ダウンロード
+      downloadFn();
+      _pendingDownload = null;
+      return;
+    }
+    adModal.classList.remove('hidden');
+  }
+  function closeAdModal() {
+    adModal.classList.add('hidden');
+    if (_pendingDownload) {
+      _pendingDownload();
+      _pendingDownload = null;
+    }
+  }
+  adModalClose.addEventListener('click', closeAdModal);
+  adModal.addEventListener('click', e => { if (e.target === adModal) closeAdModal(); });
+  loadAds();
 
   // ── ページ読み込み時にサーバーから最新データを取得して反映 ──
   async function initShop() {

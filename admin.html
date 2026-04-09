@@ -149,6 +149,20 @@
 
   .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 28px; }
 
+  /* ── 広告管理タブ ── */
+  .ad-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+  .ad-list { display: flex; flex-direction: column; gap: 12px; }
+  .ad-row { background: var(--bg2); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 16px 20px; display: flex; align-items: center; gap: 16px; transition: opacity 0.2s; }
+  .ad-row.ad-disabled { opacity: 0.45; }
+  .ad-info { flex: 1; min-width: 0; }
+  .ad-name-label { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+  .ad-code-preview { font-size: 11px; color: var(--muted); font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 400px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 3px 8px; }
+  .ad-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .ad-empty { text-align: center; padding: 48px; color: var(--muted); font-size: 14px; }
+  /* 有効トグル（緑） */
+  .toggle-enable .toggle-track { background: var(--border); }
+  .toggle-enable input:checked + .toggle-track { background: var(--ok) !important; }
+
   @media(max-width: 640px) {
     header { padding: 14px 20px; }
     .tabs { padding: 0 20px; }
@@ -156,6 +170,8 @@
     .product-row, .song-row { grid-template-columns: 56px 1fr; }
     .soldout-area, .song-actions { grid-column: 2; justify-self: end; }
     .form-row-2 { grid-template-columns: 1fr; }
+    .ad-row { flex-wrap: wrap; }
+    .ad-code-preview { max-width: 100%; }
   }
 </style>
 </head>
@@ -186,6 +202,7 @@
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('booth')">BOOTH管理</button>
     <button class="tab-btn" onclick="switchTab('songs')">曲管理</button>
+    <button class="tab-btn" onclick="switchTab('ads')">広告管理</button>
   </div>
 
   <!-- BOOTH管理タブ -->
@@ -210,6 +227,20 @@
         <button class="btn btn-green"   onclick="exportSongsJs()">⬇ songs.jsを書き出す</button>
       </div>
       <div class="song-list" id="song-list"></div>
+    </div>
+  </div>
+
+  <!-- 広告管理タブ -->
+  <div id="tab-ads" class="tab-panel">
+    <div class="main">
+      <div class="banner banner-ok" id="ads-save-banner">✓ 保存しました</div>
+      <div class="ad-toolbar">
+        <div>
+          <div style="font-size:13px;color:var(--muted)">登録した広告からランダムに1件が無料DLモーダルに表示されます</div>
+        </div>
+        <button class="btn btn-primary" onclick="openAddAdModal()">＋ 広告を追加</button>
+      </div>
+      <div class="ad-list" id="ad-list"></div>
     </div>
   </div>
 </div>
@@ -285,6 +316,33 @@
   </div>
 </div>
 
+<!-- 広告追加・編集モーダル -->
+<div class="modal-overlay" id="ad-modal-overlay" onclick="if(event.target===this)closeAdModal()">
+  <div class="modal">
+    <div class="modal-title" id="ad-modal-title">広告を追加</div>
+    <div class="form-row">
+      <label class="form-label">広告名（管理用）*</label>
+      <input class="form-input" id="ad-f-name" placeholder="例: 楽天モバイル">
+    </div>
+    <div class="form-row">
+      <label class="form-label">A8.net 広告HTMLコード *</label>
+      <textarea class="form-textarea" id="ad-f-html" style="min-height:160px;font-family:monospace;font-size:12px" placeholder="A8.netから取得したHTMLコードをここに貼り付けてください"></textarea>
+      <div class="form-hint">A8.net管理画面 → 広告素材 → HTMLタグをコピーして貼り付け</div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">表示</label>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+        <input type="checkbox" id="ad-f-enabled" checked style="width:16px;height:16px">
+        <span style="font-size:14px">有効（チェックを外すと表示されません）</span>
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeAdModal()">キャンセル</button>
+      <button class="btn btn-primary" onclick="saveAd()">保存</button>
+    </div>
+  </div>
+</div>
+
 <script src="songs.js"></script>
 <script>
   // ── 設定 ──
@@ -333,6 +391,17 @@
       // まずlocalStorageで即時描画
       renderProducts();
       renderSongList();
+      renderAdList();
+      // バックグラウンドでサーバーから広告データも取得
+      fetch('/.netlify/functions/ads')
+        .then(r => r.json())
+        .then(data => {
+          if (Array.isArray(data) && data.length > 0) {
+            localStorage.setItem('fumiha_ads', JSON.stringify(data));
+            renderAdList();
+          }
+        })
+        .catch(() => {});
       // バックグラウンドでサーバーから最新データを取得して更新
       fetch('/.netlify/functions/products')
         .then(r => r.json())
@@ -356,9 +425,11 @@
 
   // ── タブ切り替え ──
   function switchTab(name) {
-    document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', ['booth','songs'][i] === name));
+    const names = ['booth','songs','ads'];
+    document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', names[i] === name));
     document.getElementById('tab-booth').classList.toggle('active', name === 'booth');
     document.getElementById('tab-songs').classList.toggle('active', name === 'songs');
+    document.getElementById('tab-ads').classList.toggle('active', name === 'ads');
   }
 
   // ════════════════════════════════
@@ -663,6 +734,124 @@
     a.click();
     URL.revokeObjectURL(a.href);
     showBanner('songs-save-banner','banner-ok');
+  }
+
+  // ════════════════════════════════
+  // 広告管理タブ
+  // ════════════════════════════════
+  function getAdList() {
+    try {
+      const stored = JSON.parse(localStorage.getItem('fumiha_ads'));
+      if (Array.isArray(stored)) return stored;
+    } catch {}
+    return [];
+  }
+  function saveAdList(list) {
+    localStorage.setItem('fumiha_ads', JSON.stringify(list));
+    // サーバーにも保存
+    fetch('/.netlify/functions/ads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ads: list }),
+    }).catch(() => {});
+  }
+
+  function renderAdList() {
+    const ads  = getAdList();
+    const list = document.getElementById('ad-list');
+    list.innerHTML = '';
+    if (ads.length === 0) {
+      list.innerHTML = '<div class="ad-empty">広告が登録されていません。「＋ 広告を追加」から登録してください。</div>';
+      return;
+    }
+    ads.forEach((ad, i) => {
+      const row = document.createElement('div');
+      row.className = `ad-row${ad.enabled ? '' : ' ad-disabled'}`;
+      row.innerHTML = `
+        <div class="ad-info">
+          <div class="ad-name-label">${ad.name}</div>
+          <div class="ad-code-preview">${ad.html.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+        </div>
+        <div class="ad-actions">
+          <label class="toggle-label toggle-enable">
+            <span style="font-size:11px">${ad.enabled ? '有効' : '無効'}</span>
+            <span class="toggle">
+              <input type="checkbox" ${ad.enabled ? 'checked' : ''} onchange="toggleAdEnabled(${i},this.checked)">
+              <span class="toggle-track"></span>
+            </span>
+          </label>
+          <button class="btn btn-outline btn-sm" onclick="openEditAdModal(${i})">編集</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteAd(${i})">削除</button>
+        </div>`;
+      list.appendChild(row);
+    });
+  }
+
+  function toggleAdEnabled(index, enabled) {
+    const ads = getAdList();
+    ads[index].enabled = enabled;
+    saveAdList(ads);
+    renderAdList();
+    showBanner('ads-save-banner', 'banner-ok');
+  }
+
+  let adEditingIndex = -1;
+
+  function openAddAdModal() {
+    adEditingIndex = -1;
+    document.getElementById('ad-modal-title').textContent = '広告を追加';
+    document.getElementById('ad-f-name').value    = '';
+    document.getElementById('ad-f-html').value    = '';
+    document.getElementById('ad-f-enabled').checked = true;
+    document.getElementById('ad-modal-overlay').classList.add('show');
+  }
+
+  function openEditAdModal(index) {
+    adEditingIndex = index;
+    const ad = getAdList()[index];
+    document.getElementById('ad-modal-title').textContent = '広告を編集';
+    document.getElementById('ad-f-name').value    = ad.name;
+    document.getElementById('ad-f-html').value    = ad.html;
+    document.getElementById('ad-f-enabled').checked = ad.enabled;
+    document.getElementById('ad-modal-overlay').classList.add('show');
+  }
+
+  function closeAdModal() {
+    document.getElementById('ad-modal-overlay').classList.remove('show');
+  }
+
+  function saveAd() {
+    const name = document.getElementById('ad-f-name').value.trim();
+    const html = document.getElementById('ad-f-html').value.trim();
+    if (!name) { alert('広告名を入力してください'); return; }
+    if (!html) { alert('HTMLコードを入力してください'); return; }
+
+    const ads = getAdList();
+    const ad  = {
+      id:      adEditingIndex >= 0 ? ads[adEditingIndex].id : `ad_${Date.now()}`,
+      name,
+      html,
+      enabled: document.getElementById('ad-f-enabled').checked,
+    };
+
+    if (adEditingIndex >= 0) {
+      ads[adEditingIndex] = ad;
+    } else {
+      ads.push(ad);
+    }
+    saveAdList(ads);
+    renderAdList();
+    closeAdModal();
+    showBanner('ads-save-banner', 'banner-ok');
+  }
+
+  function deleteAd(index) {
+    const ads = getAdList();
+    if (!confirm(`「${ads[index].name}」を削除しますか？`)) return;
+    ads.splice(index, 1);
+    saveAdList(ads);
+    renderAdList();
+    showBanner('ads-save-banner', 'banner-ok');
   }
 
   // ── バナー表示 ──
