@@ -907,14 +907,23 @@
 
       // フリー
       if(isFree) {
+        btn.textContent = '無料DL';
+        btn.disabled = false;
         if(url) {
-          btn.textContent = '無料DL';
-          btn.disabled = false;
           btn.onclick = () => window.open(url, '_blank', 'noopener');
         } else {
-          btn.textContent = '無料DL';
-          btn.disabled = false;
-          // URLなし＝直接ダウンロードなどは後で対応
+          // サイトから直接ダウンロード
+          const audioEl = card.querySelector('audio');
+          const src = audioEl ? audioEl.getAttribute('src') : '';
+          const title = card.querySelector('.card-title')?.textContent || 'BGM';
+          btn.onclick = () => {
+            const a = document.createElement('a');
+            a.href = src;
+            a.download = title + '.mp3';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          };
         }
         return;
       }

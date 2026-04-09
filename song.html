@@ -641,7 +641,19 @@
     if (isFree) {
       btn.textContent = '無料DL';
       btn.disabled = false;
-      if (url) btn.onclick = () => window.open(url, '_blank', 'noopener');
+      if (url) {
+        btn.onclick = () => window.open(url, '_blank', 'noopener');
+      } else {
+        // サイトから直接ダウンロード
+        btn.onclick = () => {
+          const a = document.createElement('a');
+          a.href = song.audio;
+          a.download = song.title + '.mp3';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        };
+      }
       return;
     }
     if (url) {
