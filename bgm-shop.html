@@ -623,20 +623,34 @@
 
   .ad-modal-close {
     position: absolute;
-    top: 12px; right: 14px;
-    width: 30px; height: 30px;
+    top: 10px; right: 12px;
+    width: 22px; height: 22px;
     border-radius: 50%;
     border: none;
-    background: #eee;
-    font-size: 16px;
+    background: transparent;
+    font-size: 11px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #555;
-    transition: background 0.15s;
+    color: #ccc;
+    transition: color 0.15s;
+    opacity: 0;
+    pointer-events: none;
   }
-  .ad-modal-close:hover { background: #ddd; }
+  .ad-modal-close.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .ad-modal-close:hover { color: #999; }
+
+  .ad-modal-skip {
+    text-align: right;
+    font-size: 11px;
+    color: #ccc;
+    margin-bottom: 12px;
+    height: 16px;
+  }
 
   .ad-modal-label {
     font-size: 11px;
@@ -665,12 +679,9 @@
 <div class="ad-modal-overlay hidden" id="ad-modal">
   <div class="ad-modal-box">
     <button class="ad-modal-close" id="ad-modal-close">✕</button>
+    <div class="ad-modal-skip" id="ad-modal-skip"></div>
     <div class="ad-modal-label">Sponsored</div>
-    <div class="ad-modal-content" id="ad-modal-ad">
-      <!-- ▼ ここにA8.netの広告コードを貼り付けてください ▼ -->
-
-      <!-- ▲ ここまで ▲ -->
-    </div>
+    <div class="ad-modal-content" id="ad-modal-ad"></div>
     <div class="ad-modal-note">広告を閉じるとダウンロードが始まります</div>
   </div>
 </div>
@@ -1052,6 +1063,9 @@
     return enabled[Math.floor(Math.random() * enabled.length)];
   }
 
+  const AD_SKIP_SEC = 5; // 何秒後に×を表示するか
+  let _skipTimer = null;
+
   function showAdModal(downloadFn) {
     _pendingDownload = downloadFn;
     const ad = getRandomAd();
@@ -1059,14 +1073,30 @@
     if (ad) {
       adContent.innerHTML = ad.html;
     } else {
-      // 広告未登録時は即ダウンロード
       downloadFn();
       _pendingDownload = null;
       return;
     }
+    // ×ボタンを非表示にしてカウントダウン開始
+    adModalClose.classList.remove('visible');
+    const skipEl = document.getElementById('ad-modal-skip');
+    skipEl.textContent = `${AD_SKIP_SEC}秒後にスキップ`;
+    let remaining = AD_SKIP_SEC;
+    clearInterval(_skipTimer);
+    _skipTimer = setInterval(() => {
+      remaining--;
+      if (remaining <= 0) {
+        clearInterval(_skipTimer);
+        skipEl.textContent = '';
+        adModalClose.classList.add('visible');
+      } else {
+        skipEl.textContent = `${remaining}秒後にスキップ`;
+      }
+    }, 1000);
     adModal.classList.remove('hidden');
   }
   function closeAdModal() {
+    clearInterval(_skipTimer);
     adModal.classList.add('hidden');
     if (_pendingDownload) {
       _pendingDownload();
@@ -1074,7 +1104,8 @@
     }
   }
   adModalClose.addEventListener('click', closeAdModal);
-  adModal.addEventListener('click', e => { if (e.target === adModal) closeAdModal(); });
+  // 背景クリックは×が出るまで無効
+  adModal.addEventListener('click', e => { if (e.target === adModal && adModalClose.classList.contains('visible')) closeAdModal(); });
   loadAds();
 
   // ── ページ読み込み時にサーバーから最新データを取得して反映 ──
