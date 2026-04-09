@@ -896,8 +896,8 @@
         <div class="card-desc">${song.description}</div>
         <div class="waveform" id="${wfId}" onclick="togglePlay('${song.id}','${wfId}','${pbId}')"></div>
         <div class="player-row">
-          <button class="play-btn" id="${pbId}" onclick="togglePlay('${song.id}','${wfId}','${pbId}')">▶</button>
           <button class="restart-btn" onclick="restartPlay('${song.id}','${wfId}','${pbId}')" title="最初から再生">⏮</button>
+          <button class="play-btn" id="${pbId}" onclick="togglePlay('${song.id}','${wfId}','${pbId}')">▶</button>
           <div class="player-info"><div class="player-time" id="${ptId}">${song.duration}</div></div>
         </div>
         <audio id="${song.id}" src="${song.audio}"></audio>
