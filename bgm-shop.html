@@ -997,15 +997,8 @@
         } else {
           const audioEl = card.querySelector('audio');
           const src = audioEl ? audioEl.getAttribute('src') : '';
-          const title = card.querySelector('.card-title')?.textContent || 'BGM';
-          btn.onclick = () => showAdModal(() => {
-            const a = document.createElement('a');
-            a.href = src;
-            a.download = title + '.mp3';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-          });
+          const title = (card.querySelector('.card-title')?.textContent || 'BGM').trim();
+          btn.onclick = () => showAdModal(() => downloadAudio(src, title + '.mp3'));
         }
         return;
       }
@@ -1023,6 +1016,30 @@
         btn.onclick = null;
       }
     });
+  }
+
+  // ── ダウンロードヘルパー（fetch→Blob経由で確実にDL） ──
+  async function downloadAudio(src, filename) {
+    try {
+      const res     = await fetch(src);
+      const blob    = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a       = document.createElement('a');
+      a.href     = blobUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+    } catch {
+      // fetchが使えない環境はフォールバック
+      const a = document.createElement('a');
+      a.href     = src;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
   }
 
   // ── 広告モーダル ──

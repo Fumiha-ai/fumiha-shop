@@ -702,6 +702,29 @@
     }
   };
 
+  /* ── ダウンロードヘルパー（fetch→Blob経由で確実にDL） ── */
+  async function downloadAudio(src, filename) {
+    try {
+      const res     = await fetch(src);
+      const blob    = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a       = document.createElement('a');
+      a.href     = blobUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+    } catch {
+      const a = document.createElement('a');
+      a.href     = src;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  }
+
   /* ── 広告モーダル ── */
   let _pendingDownload = null;
   let _adCache = null;
@@ -794,14 +817,7 @@
       if (url) {
         btn.onclick = () => showAdModal(() => window.open(url, '_blank', 'noopener'));
       } else {
-        btn.onclick = () => showAdModal(() => {
-          const a = document.createElement('a');
-          a.href = song.audio;
-          a.download = song.title + '.mp3';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-        });
+        btn.onclick = () => showAdModal(() => downloadAudio(song.audio, song.title + '.mp3'));
       }
       return;
     }
