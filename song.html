@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="page-title">BGM 詳細 — ふみは BGM SHOP</title>
+<title id="page-title">BGM 詳細 — ふみはBGM</title>
 <!-- OGP (JS で上書き) -->
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="ふみは BGM SHOP">
-<meta id="og-title"       property="og:title"       content="ふみは BGM SHOP">
+<meta property="og:site_name" content="ふみはBGM">
+<meta id="og-title"       property="og:title"       content="ふみはBGM">
 <meta id="og-description" property="og:description"  content="ロイヤリティフリーBGM販売">
 <meta id="og-image"       property="og:image"        content="">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -400,14 +400,14 @@
 <!-- Nav -->
 <nav class="nav">
   <a class="back-btn" href="bgm-shop.html">← 曲一覧へ戻る</a>
-  <a class="nav-brand" href="bgm-shop.html">ふみは BGM SHOP</a>
+  <a class="nav-brand" href="bgm-shop.html">ふみはBGM</a>
 </nav>
 
 <!-- 動的コンテンツ -->
 <div id="main-content"></div>
 
 <footer>
-  <p>© 2025 ふみは BGM SHOP — All BGM produced with Suno AI</p>
+  <p>© 2025 ふみはBGM — All BGM produced with Suno AI</p>
 </footer>
 
 <script src="songs.js"></script>
@@ -430,8 +430,8 @@
   }
 
   /* ── ページタイトル / OGP ── */
-  document.getElementById('page-title').textContent       = `${song.title} — ふみは BGM SHOP`;
-  document.getElementById('og-title').content             = `${song.title} — ふみは BGM SHOP`;
+  document.getElementById('page-title').textContent       = `${song.title} — ふみはBGM`;
+  document.getElementById('og-title').content             = `${song.title} — ふみはBGM`;
   document.getElementById('og-description').content       = song.description;
   if (song.jacket) document.getElementById('og-image').content = song.jacket;
 

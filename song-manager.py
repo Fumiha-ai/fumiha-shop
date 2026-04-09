@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-ふみは BGM SHOP 曲管理ツール
+ふみはBGM 曲管理ツール
 songs.jsを直接読み書きするデスクトップGUIツール
 """
 import tkinter as tk
@@ -95,7 +95,7 @@ class App:
     def __init__(self, root):
         self.root   = root
         self.songs  = []
-        root.title('ふみは BGM SHOP 曲管理ツール')
+        root.title('ふみはBGM 曲管理ツール')
         root.geometry('860x560')
         root.minsize(700, 440)
         root.configure(bg='#F7F8FC')
@@ -125,7 +125,7 @@ class App:
         hdr = tk.Frame(self.root, bg='#4A6CF7', height=52)
         hdr.pack(fill='x')
         hdr.pack_propagate(False)
-        tk.Label(hdr, text='ふみは BGM SHOP  曲管理ツール', bg='#4A6CF7', fg='white',
+        tk.Label(hdr, text='ふみはBGM  曲管理ツール', bg='#4A6CF7', fg='white',
                  font=F_TITLE).pack(side='left', padx=22, pady=13)
 
         # ツールバー
