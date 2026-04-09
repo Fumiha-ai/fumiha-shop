@@ -926,6 +926,7 @@
       bar.className = 'wave-bar';
       const h = 8 + Math.random()*24;
       bar.style.height = h+'px';
+      bar.dataset.h = h;
       wf.appendChild(bar);
     }
   });
@@ -1112,7 +1113,7 @@
     } else {
       clearInterval(animations[wfId]);
       wf.querySelectorAll('.wave-bar').forEach(bar => {
-        bar.style.height = '';
+        bar.style.height = (bar.dataset.h || 8) + 'px';
         bar.style.background = 'var(--border)';
       });
     }

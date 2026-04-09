@@ -743,7 +743,9 @@
   for (let i = 0; i < 48; i++) {
     const bar = document.createElement('div');
     bar.className = 'wave-bar';
-    bar.style.height = (8 + Math.random() * 24) + 'px';
+    const h = 8 + Math.random() * 24;
+    bar.style.height = h + 'px';
+    bar.dataset.h = h;
     wf.appendChild(bar);
   }
 
@@ -760,7 +762,7 @@
     } else {
       clearInterval(animTimer);
       wf.querySelectorAll('.wave-bar').forEach(b => {
-        b.style.height = '';
+        b.style.height = (b.dataset.h || 8) + 'px';
         b.style.background = 'var(--border)';
       });
     }
