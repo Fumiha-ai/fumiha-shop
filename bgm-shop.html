@@ -993,12 +993,25 @@
         btn.textContent = '無料DL';
         btn.disabled = false;
         if(url) {
-          btn.onclick = () => showAdModal(() => window.open(url, '_blank', 'noopener'));
+          btn.onclick = () => {
+            window.open(url, '_blank', 'noopener');
+            showAdModal();
+          };
         } else {
           const audioEl = card.querySelector('audio');
-          const src = audioEl ? audioEl.getAttribute('src') : '';
+          const src   = audioEl ? audioEl.getAttribute('src') : '';
           const title = (card.querySelector('.card-title')?.textContent || 'BGM').trim();
-          btn.onclick = () => showAdModal(() => downloadAudio(src, title + '.mp3'));
+          btn.onclick = () => {
+            // ユーザー操作の瞬間にダウンロード実行（asyncなし）
+            const a = document.createElement('a');
+            a.href     = src;
+            a.download = title + '.mp3';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            // ダウンロード開始後に広告を表示
+            showAdModal();
+          };
         }
         return;
       }
@@ -1018,32 +1031,7 @@
     });
   }
 
-  // ── ダウンロードヘルパー（fetch→Blob経由で確実にDL） ──
-  async function downloadAudio(src, filename) {
-    try {
-      const res     = await fetch(src);
-      const blob    = await res.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const a       = document.createElement('a');
-      a.href     = blobUrl;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
-    } catch {
-      // fetchが使えない環境はフォールバック
-      const a = document.createElement('a');
-      a.href     = src;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
-  }
-
   // ── 広告モーダル ──
-  let _pendingDownload = null;
   let _adCache = null;
   const adModal      = document.getElementById('ad-modal');
   const adModalClose = document.getElementById('ad-modal-close');
@@ -1077,18 +1065,10 @@
   const AD_SKIP_SEC = 5; // 何秒後に×を表示するか
   let _skipTimer = null;
 
-  function showAdModal(downloadFn) {
-    _pendingDownload = downloadFn;
+  function showAdModal() {
     const ad = getRandomAd();
-    const adContent = document.getElementById('ad-modal-ad');
-    if (ad) {
-      adContent.innerHTML = ad.html;
-    } else {
-      downloadFn();
-      _pendingDownload = null;
-      return;
-    }
-    // ×ボタンを非表示にしてカウントダウン開始
+    if (!ad) return;
+    document.getElementById('ad-modal-ad').innerHTML = ad.html;
     adModalClose.classList.remove('visible');
     const skipEl = document.getElementById('ad-modal-skip');
     skipEl.textContent = `${AD_SKIP_SEC}秒後にスキップ`;
@@ -1109,13 +1089,8 @@
   function closeAdModal() {
     clearInterval(_skipTimer);
     adModal.classList.add('hidden');
-    if (_pendingDownload) {
-      _pendingDownload();
-      _pendingDownload = null;
-    }
   }
   adModalClose.addEventListener('click', closeAdModal);
-  // 背景クリックは×が出るまで無効
   adModal.addEventListener('click', e => { if (e.target === adModal && adModalClose.classList.contains('visible')) closeAdModal(); });
   loadAds();
 
