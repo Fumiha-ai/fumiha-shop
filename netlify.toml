@@ -4,3 +4,9 @@
 
 [functions]
   node_bundler = "esbuild"
+
+# 音声ファイルを必ずダウンロードとして扱う（ブラウザ再生を防ぐ）
+[[headers]]
+  for = "/audio/*"
+  [headers.values]
+    Content-Disposition = "attachment"
