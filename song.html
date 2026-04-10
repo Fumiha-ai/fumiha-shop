@@ -642,7 +642,7 @@
 
   /* ── バッジテキスト ── */
   const BADGE = {
-    'one-of-a-kind': '限定一点 · 限定1点',
+    'one-of-a-kind': '限定1点',
     'regular':        '通常販売',
     'free':           'フリー · 無料DL',
   };
@@ -713,16 +713,20 @@
       </div>
     </div>
 
-    <!-- License table -->
+    <!-- License section -->
     <div class="detail-section">
       <div class="section-title">ライセンス</div>
-      <div class="license-list">
-        <div class="license-item"><span class="ok">✓</span>個人使用・非商用</div>
-        <div class="license-item"><span class="ok">✓</span>YouTube・配信収益化</div>
-        <div class="license-item"><span class="ok">✓</span>SNS投稿・動画編集</div>
-        <div class="license-item"><span class="ok">✓</span>ゲーム・アプリ組み込み（ゲーム用途のみ）</div>
-        <div class="license-item"><span class="ok">✓</span>商用広告・プロモ動画（ビジネス用途のみ）</div>
-        <div class="license-item"><span class="ng">×</span>再配布・再販売は禁止</div>
+      <div style="font-size:14px; color:var(--muted); line-height:1.9;">
+        ${song.type === 'free' ? `
+          <p><strong style="color:var(--text);">フリーライセンス</strong></p>
+          <p style="margin-top:6px;">無償で利用可能。個人・商用問わず、クレジット表記は任意で使用できます。</p>
+        ` : song.type === 'regular' ? `
+          <p><strong style="color:var(--text);">通常ライセンス</strong></p>
+          <p style="margin-top:6px;">有償。購入者は非独占的・非譲渡的な利用権を得ます。複数プロジェクトで使用可能です。</p>
+        ` : `
+          <p><strong style="color:var(--text);">限定1点ライセンス</strong></p>
+          <p style="margin-top:6px;">有償・独占販売。購入後は当該楽曲の販売を終了し、購入者のみが使用できます。</p>
+        `}
       </div>
     </div>`;
 
