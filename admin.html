@@ -299,7 +299,7 @@
       <label class="form-label">販売種別 *</label>
       <select class="form-select" id="f-type">
         <option value="regular">通常販売</option>
-        <option value="one-of-a-kind">一品物</option>
+        <option value="one-of-a-kind">限定一点</option>
         <option value="free">フリー（無料）</option>
       </select>
     </div>
@@ -387,7 +387,7 @@
   // ── 設定 ──
   const ADMIN_PASSWORD = '76727458';
 
-  const TYPE_LABEL  = { 'one-of-a-kind': '一品物', regular: '通常', free: 'フリー' };
+  const TYPE_LABEL  = { 'one-of-a-kind': '限定一点', regular: '通常', free: 'フリー' };
 
   const GRAD_PRESETS = [
     { label: 'ダークパープル', value: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)' },
@@ -503,7 +503,7 @@
         return;
       }
 
-      const typeLbl = { 'one-of-a-kind': '一品物', regular: '通常', free: 'フリー' };
+      const typeLbl = { 'one-of-a-kind': '限定一点', regular: '通常', free: 'フリー' };
       let totalImpressions = 0, totalDownloads = 0;
 
       _statsRows = songs.map(s => {
@@ -639,7 +639,7 @@
               <input type="checkbox" id="sold-${p.id}" ${soldOut?'checked':''} ${!isOneOf?'disabled':''}>
               <span class="toggle-track"></span>
             </span>
-            ${isOneOf?'':'<span style="font-size:10px">一品物のみ</span>'}
+            ${isOneOf?'':'<span style="font-size:10px">限定一点のみ</span>'}
           </label>
         </div>`;
       list.appendChild(row);
@@ -677,7 +677,7 @@
     const syncBtn = document.getElementById('sync-btn');
     const saved   = getSaved();
     const targets = PRODUCTS.filter(p => p.type==='one-of-a-kind' && (saved[p.id]?.boothUrl||'').length>0);
-    if(!targets.length) { showBanner('sync-banner','banner-error','⚠ 一品物にBOOTH URLが設定されていません'); return; }
+    if(!targets.length) { showBanner('sync-banner','banner-error','⚠ 限定一点にBOOTH URLが設定されていません'); return; }
     syncBtn.disabled = true; syncBtn.textContent = '確認中…';
     showBanner('sync-banner','banner-info',`🔄 ${targets.length}件確認中…`);
     targets.forEach(p => setSyncBadge(p.id,'checking','確認中…'));

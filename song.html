@@ -642,7 +642,7 @@
 
   /* ── バッジテキスト ── */
   const BADGE = {
-    'one-of-a-kind': '一品物 · 限定1点',
+    'one-of-a-kind': '限定一点 · 限定1点',
     'regular':        '通常販売',
     'free':           'フリー · 無料DL',
   };
@@ -729,7 +729,7 @@
   /* ── 他の曲 ── */
   const others = SONGS.filter(s => s.id !== song.id);
   if (others.length > 0) {
-    const TYPE_LABEL = { 'one-of-a-kind': '一品物', 'regular': '通常販売', 'free': '無料' };
+    const TYPE_LABEL = { 'one-of-a-kind': '限定一点', 'regular': '通常販売', 'free': '無料' };
     const cards = others.map(s => `
       <a class="other-card" href="song.html?id=${s.id}">
         <div class="other-jacket" style="background:${s.jacketGradient}">

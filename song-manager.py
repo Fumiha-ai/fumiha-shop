@@ -21,7 +21,7 @@ DEPLOY_BAT = os.path.join(SCRIPT_DIR, 'deploy.bat')
 
 TYPE_OPTIONS = [
     ('regular',       '通常販売'),
-    ('one-of-a-kind', '一品物（限定1点）'),
+    ('one-of-a-kind', '限定一点（限定1点）'),
     ('free',          'フリー（無料）'),
 ]
 GRAD_PRESETS = [
@@ -180,7 +180,7 @@ class App:
         self.tree.delete(*self.tree.get_children())
         self.tree.tag_configure('odd',  background=self._stripe_odd)
         self.tree.tag_configure('even', background=self._stripe_even)
-        TYPE_JP = {'regular':'通常', 'one-of-a-kind':'一品物', 'free':'フリー'}
+        TYPE_JP = {'regular':'通常', 'one-of-a-kind':'限定一点', 'free':'フリー'}
         for i, s in enumerate(self.songs):
             price = '無料' if s.get('price',0)==0 else f"¥{s.get('price',0):,}"
             tag = 'odd' if i % 2 == 0 else 'even'
