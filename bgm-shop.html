@@ -603,59 +603,22 @@
   .card:nth-child(5) { animation-delay: 0.2s; }
   .card:nth-child(6) { animation-delay: 0.25s; }
 
-  /* ── タグフィルター ── */
-  .tag-filter-wrap {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 40px 24px;
-  }
-  .tag-filter-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--bg2);
-    border: 1.5px solid var(--border);
-    border-radius: 999px;
-    padding: 7px 18px;
-    font-size: 13px;
-    font-weight: 700;
-    font-family: 'Noto Sans JP', sans-serif;
-    cursor: pointer;
-    color: var(--muted);
-    transition: all 0.15s;
-  }
-  .tag-filter-toggle:hover, .tag-filter-toggle.active {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-  .tag-filter-toggle .arrow { transition: transform 0.2s; font-style: normal; }
-  .tag-filter-toggle.open .arrow { transform: rotate(180deg); }
-
-  .tag-filter-panel {
-    display: none;
-    margin-top: 12px;
-    background: var(--bg2);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px 24px;
-  }
-  .tag-filter-panel.open { display: block; }
-
+  /* ── タグ一覧（アコーディオン内） ── */
   .tag-cat-label {
     font-size: 11px;
     font-weight: 700;
     color: var(--muted);
-    text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 8px;
+    padding: 14px 20px 0;
   }
-  .tag-cat-label + .tag-cat-label, .tag-pills-row + .tag-cat-label { margin-top: 16px; }
-  .tag-pills-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag-pills-row { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 20px; }
+  .tag-pills-row:last-of-type { padding-bottom: 16px; }
 
   .tag-filter-btn {
     font-size: 12px;
     font-family: 'Noto Sans JP', sans-serif;
-    padding: 4px 12px;
+    padding: 5px 13px;
     border-radius: 999px;
     border: 1px solid var(--border);
     background: var(--bg);
@@ -664,23 +627,41 @@
     transition: all 0.12s;
     white-space: nowrap;
   }
-  .tag-filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .tag-filter-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
   .tag-filter-btn.active { background: #F0FFF4; border-color: #6BCB77; color: #1E7A34; font-weight: 700; }
 
-  .tag-filter-clear {
+  .tag-panel-footer {
+    display: none;
+    padding: 10px 20px 16px;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+  }
+  .tag-panel-footer.visible { display: block; }
+  .tag-panel-clear {
     font-size: 12px;
     font-family: 'Noto Sans JP', sans-serif;
-    padding: 4px 14px;
+    padding: 5px 16px;
     border-radius: 999px;
     border: 1px solid #FF6B6B;
     background: #FFF5F5;
     color: #C0392B;
     cursor: pointer;
     font-weight: 700;
-    display: none;
-    margin-top: 14px;
   }
-  .tag-filter-clear.visible { display: inline-block; }
+  .tag-panel-clear:hover { background: #FF6B6B; color: #fff; }
+
+  .tag-active-badge {
+    display: none;
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 999px;
+    padding: 1px 8px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .tag-active-badge.visible { display: inline; }
 
   /* カード内タグピル */
   .card-tags {
@@ -696,7 +677,10 @@
     border: 1px solid #B7EBC4;
     border-radius: 999px;
     padding: 2px 9px;
+    cursor: pointer;
+    transition: all 0.12s;
   }
+  .card-tag:hover { background: #D4F5DC; }
   .card-tag.active-filter {
     background: #1E7A34;
     color: #fff;
@@ -709,7 +693,6 @@
     .stats-bar { gap: 24px; padding: 28px 20px; }
     .section { padding: 0 20px; }
     .license-accordion { padding: 0 20px; }
-    .tag-filter-wrap { padding: 0 20px 20px; }
   }
 
   /* ── 広告モーダル ── */
@@ -897,22 +880,25 @@
   </div>
 </div>
 
+<!-- タグ一覧 -->
+<div class="license-accordion" style="max-width:900px; margin-bottom:8px;">
+  <button class="license-tab" id="tag-accordion-btn" onclick="toggleTagAccordion()" aria-expanded="false">
+    タグ一覧<span class="tag-active-badge" id="tag-active-badge"></span>
+    <span class="license-tab-arrow">▼</span>
+  </button>
+  <div class="license-panel" id="tag-accordion-panel" hidden>
+    <div id="tag-panel"></div>
+    <div class="tag-panel-footer" id="tag-panel-footer">
+      <button class="tag-panel-clear" onclick="clearTags()">タグをすべてクリア ×</button>
+    </div>
+  </div>
+</div>
 
-
-<div class="filter-bar" style="padding-top:0; padding-bottom:16px;">
+<div class="filter-bar" style="padding-top:16px; padding-bottom:32px;">
   <button class="filter-btn active" data-type="all" onclick="filterByType('all')">全種別</button>
   <button class="filter-btn" data-type="one-of-a-kind" onclick="filterByType('one-of-a-kind')">一品物</button>
   <button class="filter-btn" data-type="regular" onclick="filterByType('regular')">通常</button>
   <button class="filter-btn" data-type="free" onclick="filterByType('free')">フリー</button>
-</div>
-
-<!-- タグフィルター -->
-<div class="tag-filter-wrap">
-  <button class="tag-filter-toggle" id="tag-toggle" onclick="toggleTagPanel()">
-    タグで絞り込む <i class="arrow">▼</i>
-  </button>
-  <div class="tag-filter-panel" id="tag-panel"></div>
-  <button class="tag-filter-clear" id="tag-clear" onclick="clearTags()">タグをすべてクリア ×</button>
 </div>
 
 <div class="grid" id="songs-grid"></div>
@@ -983,7 +969,7 @@
       const buyClass = isFree ? 'buy-btn free-btn' : 'buy-btn';
       const buyText  = isFree ? '無料DL' : '準備中';
       const licenses = song.licenses.map(l => `<span class="lic-pill">${l}</span>`).join('');
-      const tagPills = (song.tags || []).map(t => `<span class="card-tag" data-tag="${t}">${t}</span>`).join('');
+      const tagPills = (song.tags || []).map(t => `<span class="card-tag" data-tag="${t}" onclick="toggleTag('${t}')">${t}</span>`).join('');
 
       const card = document.createElement('div');
       card.className = 'card';
@@ -1086,11 +1072,26 @@
     });
   })();
 
-  function toggleTagPanel() {
-    const btn   = document.getElementById('tag-toggle');
-    const panel = document.getElementById('tag-panel');
-    const open  = panel.classList.toggle('open');
-    btn.classList.toggle('open', open);
+  function toggleTagAccordion() {
+    const btn   = document.getElementById('tag-accordion-btn');
+    const panel = document.getElementById('tag-accordion-panel');
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!expanded));
+    panel.hidden = expanded;
+  }
+
+  function updateTagBadge() {
+    const badge  = document.getElementById('tag-active-badge');
+    const footer = document.getElementById('tag-panel-footer');
+    const count  = activeTags.size;
+    if (count > 0) {
+      badge.textContent = count;
+      badge.classList.add('visible');
+      footer.classList.add('visible');
+    } else {
+      badge.classList.remove('visible');
+      footer.classList.remove('visible');
+    }
   }
 
   function toggleTag(tag) {
@@ -1099,18 +1100,17 @@
     } else {
       activeTags.add(tag);
     }
-    // フィルターボタンの見た目更新
     document.querySelectorAll('.tag-filter-btn').forEach(b => {
       b.classList.toggle('active', activeTags.has(b.dataset.tag));
     });
-    document.getElementById('tag-clear').classList.toggle('visible', activeTags.size > 0);
+    updateTagBadge();
     applyFilters();
   }
 
   function clearTags() {
     activeTags.clear();
     document.querySelectorAll('.tag-filter-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('tag-clear').classList.remove('visible');
+    updateTagBadge();
     applyFilters();
   }
 
