@@ -870,12 +870,17 @@
   </button>
   <div class="license-panel" hidden>
     <div class="license-list">
-      <div class="license-item"><span class="ok">✓</span><span class="lic-text">個人使用・非商用</span></div>
-      <div class="license-item"><span class="ok">✓</span><span class="lic-text">YouTube・配信収益化</span></div>
-      <div class="license-item"><span class="ok">✓</span><span class="lic-text">SNS投稿・動画編集</span></div>
-      <div class="license-item"><span class="ok">✓</span><span class="lic-text">ゲーム・アプリ組み込み（ゲーム用途のみ）</span></div>
-      <div class="license-item"><span class="ok">✓</span><span class="lic-text">商用広告・プロモ動画（ビジネス用途のみ）</span></div>
-      <div class="license-item"><span class="ng">×</span><span class="lic-text">再配布・再販売は禁止</span></div>
+      <div class="license-item"><span class="ok">✓</span><span class="lic-text">YouTube・ニコニコ動画等の動画コンテンツへの使用</span></div>
+      <div class="license-item"><span class="ok">✓</span><span class="lic-text">ゲーム・アプリへの組み込み</span></div>
+      <div class="license-item"><span class="ok">✓</span><span class="lic-text">ライブ配信・ストリーミングでの使用</span></div>
+      <div class="license-item"><span class="ok">✓</span><span class="lic-text">ポッドキャスト・ラジオへの使用</span></div>
+      <div class="license-item"><span class="ok">✓</span><span class="lic-text">広告・プロモーション動画への使用</span></div>
+      <div class="license-item"><span class="ok">✓</span><span class="lic-text">店舗・イベントでのBGM使用</span></div>
+      <div class="license-item"><span class="ok">✓</span><span class="lic-text">教育目的・非営利目的での使用</span></div>
+      <div class="license-item"><span class="ng">×</span><span class="lic-text">楽曲データそのものの再配布・転売</span></div>
+      <div class="license-item"><span class="ng">×</span><span class="lic-text">楽曲を主体とした音楽CDや音源集としての販売</span></div>
+      <div class="license-item"><span class="ng">×</span><span class="lic-text">音楽配信サービス（Spotify等）への登録・配信</span></div>
+      <div class="license-item"><span class="ng">×</span><span class="lic-text">違法・反社会的なコンテンツへの使用</span></div>
     </div>
   </div>
 </div>
@@ -968,7 +973,6 @@
         : `¥${song.price.toLocaleString()} <span>/ 1曲</span>`;
       const buyClass = isFree ? 'buy-btn free-btn' : 'buy-btn';
       const buyText  = isFree ? '無料DL' : '準備中';
-      const licenses = song.licenses.map(l => `<span class="lic-pill">${l}</span>`).join('');
       const tagPills = (song.tags || []).map(t => `<span class="card-tag" data-tag="${t}" onclick="toggleTag('${t}')">${t}</span>`).join('');
 
       const card = document.createElement('div');
@@ -1009,7 +1013,6 @@
           <input class="volume-slider" id="${volId}" type="range" min="0" max="100" value="30" oninput="setVolume('${song.id}','${volId}','${vnumId}')">
           <span class="volume-num" id="${vnumId}">30</span>
         </div>
-        <div class="license-row">${licenses}</div>
         ${tagPills ? `<div class="card-tags">${tagPills}</div>` : ''}
         <div class="buy-row">
           <div class="price">${priceHtml}</div>

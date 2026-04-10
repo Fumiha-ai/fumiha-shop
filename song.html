@@ -652,7 +652,6 @@
     : `¥${song.price.toLocaleString()} <span>/ 1曲</span>`;
   const buyClass = isFree ? 'buy-btn free-btn' : 'buy-btn';
   const buyText  = isFree ? '無料DL' : '準備中';
-  const licenses = song.licenses.map(l => `<span class="lic-pill">${l}</span>`).join('');
   const tagPillsHtml = (song.tags || []).length
     ? `<div class="tag-pills">${(song.tags).map(t => `<span class="tag-pill">${t}</span>`).join('')}</div>`
     : '';
@@ -700,9 +699,6 @@
             <span class="volume-num" id="vol-num">30</span>
           </div>
         </div>
-
-        <!-- License pills -->
-        <div class="license-pills">${licenses}</div>
 
         <!-- Tags -->
         ${tagPillsHtml}
