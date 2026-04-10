@@ -393,7 +393,7 @@
       renderSongList();
       renderAdList();
       // バックグラウンドでサーバーから広告データも取得
-      fetch('/.netlify/functions/ads')
+      fetch('/api/ads')
         .then(r => r.json())
         .then(data => {
           if (Array.isArray(data) && data.length > 0) {
@@ -403,7 +403,7 @@
         })
         .catch(() => {});
       // バックグラウンドでサーバーから最新データを取得して更新
-      fetch('/.netlify/functions/products')
+      fetch('/api/products')
         .then(r => r.json())
         .then(data => {
           if (Object.keys(data).length > 0) {
@@ -505,7 +505,7 @@
     });
     localStorage.setItem('fumiha_products', JSON.stringify(saved));
     // サーバー（Netlify Blobs）にも保存して全訪問者に反映
-    fetch('/.netlify/functions/products', {
+    fetch('/api/products', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ products: saved }),
@@ -525,7 +525,7 @@
     let updated=0, errors=0;
     await Promise.all(targets.map(async p => {
       try {
-        const res  = await fetch(`/.netlify/functions/check-booth-stock?url=${encodeURIComponent(saved[p.id].boothUrl)}`);
+        const res  = await fetch(`/api/check-booth-stock?url=${encodeURIComponent(saved[p.id].boothUrl)}`);
         const data = await res.json();
         if(data.soldOut){ saved[p.id].soldOut=true; setSyncBadge(p.id,'sold-out','売り切れ'); updated++; }
         else setSyncBadge(p.id,'in-stock','在庫あり');
@@ -533,7 +533,7 @@
     }));
     localStorage.setItem('fumiha_products', JSON.stringify(saved));
     // 同期結果をサーバーにも反映
-    fetch('/.netlify/functions/products', {
+    fetch('/api/products', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ products: saved }),
@@ -749,7 +749,7 @@
   function saveAdList(list) {
     localStorage.setItem('fumiha_ads', JSON.stringify(list));
     // サーバーにも保存
-    fetch('/.netlify/functions/ads', {
+    fetch('/api/ads', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ads: list }),

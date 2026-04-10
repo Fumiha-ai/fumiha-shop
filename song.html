@@ -853,7 +853,7 @@
       if (Array.isArray(stored)) _adCache = stored;
     } catch {}
     try {
-      const res = await fetch('/.netlify/functions/ads');
+      const res = await fetch('/api/ads');
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
@@ -980,7 +980,7 @@
     try { saved = JSON.parse(localStorage.getItem('fumiha_products')) || {}; } catch {}
     applyBuySettings(saved);
     try {
-      const res = await fetch('/.netlify/functions/products');
+      const res = await fetch('/api/products');
       if (res.ok) {
         const data = await res.json();
         if (Object.keys(data).length > 0) {

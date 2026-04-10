@@ -1224,7 +1224,7 @@
     // バックグラウンドでサーバーから更新
     // nullまたは空配列のときはlocalStorageを上書きしない（デプロイ後のリセット防止）
     try {
-      const res = await fetch('/.netlify/functions/ads');
+      const res = await fetch('/api/ads');
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
@@ -1290,7 +1290,7 @@
     // まずlocalStorageで即時描画（フォールバック）
     applyProductSettings();
     try {
-      const res = await fetch('/.netlify/functions/products');
+      const res = await fetch('/api/products');
       if (res.ok) {
         const data = await res.json();
         if (Object.keys(data).length > 0) {
