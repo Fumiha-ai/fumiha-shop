@@ -19,6 +19,7 @@ const SONGS = [
     audio:          'audio/neon-lobby.mp3',
     youtube:        'https://www.youtube.com/watch?v=dQw4w9WgXcQ', // YouTubeリンクを入力
     licenses:       ['配信OK', '収益化OK', 'ループ'],
+    tags:           ['明るい', '楽しい', 'ポップ'],
   },
   {
     id:             'audio2',
@@ -32,6 +33,7 @@ const SONGS = [
     jacketEmoji:    '☕',
     audio:          'audio/cozy-rain-cafe.mp3',
     licenses:       ['配信OK', '収益化OK', 'ループ'],
+    tags:           ['穏やか', '優しい', 'ヒーリング', 'アンビエント'],
   },
   {
     id:             'audio3',
@@ -45,6 +47,7 @@ const SONGS = [
     jacketEmoji:    '⚡',
     audio:          'audio/spark-intro.mp3',
     licenses:       ['YouTube収益化OK', '商用可'],
+    tags:           ['明るい', '楽しい', '力強い', '速い', 'ポップ'],
   },
   {
     id:             'audio4',
@@ -58,6 +61,7 @@ const SONGS = [
     jacketEmoji:    '🌿',
     audio:          'audio/daily-vlog-drive.mp3',
     licenses:       ['YouTube収益化OK', 'SNS投稿OK'],
+    tags:           ['明るい', '爽やか', '日常', 'アコースティック'],
   },
   {
     id:             'audio5',
@@ -71,6 +75,7 @@ const SONGS = [
     jacketEmoji:    '⚔️',
     audio:          'audio/dungeon-echo.mp3',
     licenses:       ['ゲーム内使用OK', 'アプリOK', 'ループ'],
+    tags:           ['暗い', '緊張感', '恐ろしい', 'ゲーム', 'シネマ'],
   },
   {
     id:             'audio6',
@@ -84,6 +89,7 @@ const SONGS = [
     jacketEmoji:    '💼',
     audio:          'audio/clarity-pulse.mp3',
     licenses:       ['商用OK', '社内動画OK', '広告OK'],
+    tags:           ['お洒落', '冷静', '壮大', 'デジタル'],
   },
 
   // ↓ 新しい曲はここに追加 ↓
@@ -100,5 +106,6 @@ const SONGS = [
   //   audio:          'audio/ファイル名.mp3',
   //   youtube:        'https://www.youtube.com/watch?v=XXXXXXXXXXX', // 任意: YouTubeリンクがあれば
   //   licenses:       ['配信OK', '収益化OK'],
+  //   tags:           ['明るい', 'ポップ'],   // 管理ページで設定可
   // },
 ];

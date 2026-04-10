@@ -246,6 +246,20 @@
     padding: 3px 12px;
     background: var(--bg);
   }
+  .tag-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+  .tag-pill {
+    font-size: 11px;
+    color: #1E7A34;
+    background: #F0FFF4;
+    border: 1px solid #B7EBC4;
+    border-radius: 999px;
+    padding: 3px 12px;
+  }
 
   /* Price + Buy */
   .buy-area {
@@ -639,6 +653,9 @@
   const buyClass = isFree ? 'buy-btn free-btn' : 'buy-btn';
   const buyText  = isFree ? '無料DL' : '準備中';
   const licenses = song.licenses.map(l => `<span class="lic-pill">${l}</span>`).join('');
+  const tagPillsHtml = (song.tags || []).length
+    ? `<div class="tag-pills">${(song.tags).map(t => `<span class="tag-pill">${t}</span>`).join('')}</div>`
+    : '';
 
   /* ── メインHTML ── */
   const ytId = getYouTubeId(song.youtube);
@@ -686,6 +703,9 @@
 
         <!-- License pills -->
         <div class="license-pills">${licenses}</div>
+
+        <!-- Tags -->
+        ${tagPillsHtml}
 
         <!-- Buy -->
         <div class="buy-area">

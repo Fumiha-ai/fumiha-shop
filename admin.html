@@ -147,6 +147,14 @@
   .lic-check-label input { width: 14px; height: 14px; }
   .lic-check-label:has(input:checked) { background: var(--accent-light); border-color: var(--accent); color: var(--accent); font-weight: 700; }
 
+  /* タグチェックボックス */
+  .tag-category-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin: 10px 0 6px; }
+  .tag-category-label:first-child { margin-top: 0; }
+  .tag-checks { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag-check-label { display: flex; align-items: center; gap: 4px; font-size: 12px; cursor: pointer; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; user-select: none; }
+  .tag-check-label input { width: 13px; height: 13px; }
+  .tag-check-label:has(input:checked) { background: #F0FFF4; border-color: #6BCB77; color: #1E7E34; font-weight: 700; }
+
   .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 28px; }
 
   /* ── 広告管理タブ ── */
@@ -335,6 +343,11 @@
       <div class="license-checks" id="lic-checks"></div>
     </div>
 
+    <div class="form-row">
+      <label class="form-label">タグ</label>
+      <div id="tag-checks"></div>
+    </div>
+
     <div class="modal-actions">
       <button class="btn btn-outline" onclick="closeModal()">キャンセル</button>
       <button class="btn btn-primary" onclick="saveSong()">保存</button>
@@ -388,6 +401,17 @@
   ];
 
   const LICENSE_OPTIONS = ['配信OK','収益化OK','ループ','YouTube収益化OK','商用可','SNS投稿OK','ゲーム内使用OK','アプリOK','社内動画OK','広告OK'];
+
+  const TAG_CATEGORIES = [
+    {
+      label: '雰囲気・感情',
+      tags: ['明るい','楽しい','温かい','穏やか','優しい','爽やか','お洒落','力強い','弱々しい','懐かしい','不思議','騒々しい','可愛い','渋い','シリアス','緊張感','慎ましい','寂しい','切ない','冷たい','暗い','悲しい','怒り','恐ろしい','激しい','サイバー','ファンタジー','コメディー','悪意','怪しい','日常','情熱','冷静','淡白','希望','絶望','虚無'],
+    },
+    {
+      label: 'リズム・曲調',
+      tags: ['三拍子','四拍子','変拍子','三連符','速い','遅い','一部速い','一部遅い','普通の速さ','軽快','鈍重','壮大','ポップ','ロック','メタル','ブルース','スウィング','ファンク','ボサノバ','ジャズ','クラシック','デジタル','EDM','アンビエント','民族系','カントリー','アコースティック','和風','ノイズ','童謡','シネマ','ドラマ','ゲーム','ヒーリング'],
+    },
+  ];
 
   // ── ローカルストレージから曲リストを初期化 ──
   function getSongList() {
@@ -750,6 +774,24 @@
       label.innerHTML = `<input type="checkbox" value="${opt}"> ${opt}`;
       lic.appendChild(label);
     });
+    // タグチェックボックス
+    const tagWrap = document.getElementById('tag-checks');
+    tagWrap.innerHTML = '';
+    TAG_CATEGORIES.forEach(cat => {
+      const catLabel = document.createElement('div');
+      catLabel.className = 'tag-category-label';
+      catLabel.textContent = cat.label;
+      tagWrap.appendChild(catLabel);
+      const row = document.createElement('div');
+      row.className = 'tag-checks';
+      cat.tags.forEach(t => {
+        const label = document.createElement('label');
+        label.className = 'tag-check-label';
+        label.innerHTML = `<input type="checkbox" value="${t}"> ${t}`;
+        row.appendChild(label);
+      });
+      tagWrap.appendChild(row);
+    });
   }
 
   function openAddModal() {
@@ -786,6 +828,10 @@
     document.querySelectorAll('#lic-checks input[type=checkbox]').forEach(cb => {
       cb.checked = (s.licenses||[]).includes(cb.value);
     });
+    // タグをチェック
+    document.querySelectorAll('#tag-checks input[type=checkbox]').forEach(cb => {
+      cb.checked = (s.tags||[]).includes(cb.value);
+    });
     document.getElementById('modal-overlay').classList.add('show');
   }
 
@@ -799,7 +845,8 @@
 
     const jacketFile = document.getElementById('f-jacket').value.trim();
     const audioFile  = document.getElementById('f-audio').value.trim();
-    const licenses   = [...document.querySelectorAll('#lic-checks input:checked')].map(c => c.value);
+    const licenses = [...document.querySelectorAll('#lic-checks input:checked')].map(c => c.value);
+    const tags     = [...document.querySelectorAll('#tag-checks input:checked')].map(c => c.value);
 
     const song = {
       id:             '',
@@ -813,6 +860,7 @@
       jacketEmoji:    document.getElementById('f-emoji').value.trim() || '🎵',
       audio:          audioFile  ? `audio/${audioFile}`  : '',
       licenses,
+      tags,
     };
 
     const songs = getSongList();
@@ -845,7 +893,8 @@
   function exportSongsJs() {
     const songs = getSongList();
     const entries = songs.map(s => {
-      const lic = JSON.stringify(s.licenses || []);
+      const lic  = JSON.stringify(s.licenses || []);
+      const tags = JSON.stringify(s.tags     || []);
       return `  {
     id:             '${s.id}',
     title:          '${s.title}',
@@ -858,6 +907,7 @@
     jacketEmoji:    '${s.jacketEmoji || '🎵'}',
     audio:          '${s.audio || ''}',
     licenses:       ${lic},
+    tags:           ${tags},
   }`;
     }).join(',\n');
 
