@@ -163,6 +163,16 @@
   .toggle-enable .toggle-track { background: var(--border); }
   .toggle-enable input:checked + .toggle-track { background: var(--ok) !important; }
 
+  /* ── 統計タブ ── */
+  .stats-table { width: 100%; border-collapse: collapse; }
+  .stats-table th, .stats-table td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .stats-table th { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; background: var(--bg); }
+  .stats-table tbody tr:last-child td { border-bottom: none; }
+  .stats-table tbody tr:hover td { background: var(--bg); }
+  .stats-num { font-size: 20px; font-weight: 700; color: var(--text); }
+  .stats-num-label { font-size: 11px; color: var(--muted); }
+  .stats-loading { text-align: center; padding: 48px; color: var(--muted); font-size: 14px; }
+
   @media(max-width: 640px) {
     header { padding: 14px 20px; }
     .tabs { padding: 0 20px; }
@@ -203,6 +213,7 @@
     <button class="tab-btn active" onclick="switchTab('booth')">BOOTH管理</button>
     <button class="tab-btn" onclick="switchTab('songs')">曲管理</button>
     <button class="tab-btn" onclick="switchTab('ads')">広告管理</button>
+    <button class="tab-btn" onclick="switchTab('stats')">統計</button>
   </div>
 
   <!-- BOOTH管理タブ -->
@@ -227,6 +238,19 @@
         <button class="btn btn-green"   onclick="exportSongsJs()">⬇ songs.jsを書き出す</button>
       </div>
       <div class="song-list" id="song-list"></div>
+    </div>
+  </div>
+
+  <!-- 統計タブ -->
+  <div id="tab-stats" class="tab-panel">
+    <div class="main">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+        <div style="font-size:13px;color:var(--muted)">曲ごとのインプレッション数・ダウンロード数（フリー曲のみ計上）を確認できます</div>
+        <button class="btn btn-outline" onclick="loadStats()">🔄 更新</button>
+      </div>
+      <div id="stats-content">
+        <div class="stats-loading">「統計」タブを開くと自動的に読み込まれます</div>
+      </div>
     </div>
   </div>
 
@@ -425,11 +449,76 @@
 
   // ── タブ切り替え ──
   function switchTab(name) {
-    const names = ['booth','songs','ads'];
+    const names = ['booth','songs','ads','stats'];
     document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', names[i] === name));
     document.getElementById('tab-booth').classList.toggle('active', name === 'booth');
     document.getElementById('tab-songs').classList.toggle('active', name === 'songs');
     document.getElementById('tab-ads').classList.toggle('active', name === 'ads');
+    document.getElementById('tab-stats').classList.toggle('active', name === 'stats');
+    if (name === 'stats') loadStats();
+  }
+
+  // ── 統計タブ ──
+  async function loadStats() {
+    const content = document.getElementById('stats-content');
+    content.innerHTML = '<div class="stats-loading">読み込み中...</div>';
+    try {
+      const res = await fetch('/api/stats');
+      if (!res.ok) throw new Error('fetch failed');
+      const stats = await res.json();
+      const songs = getSongList();
+
+      if (songs.length === 0) {
+        content.innerHTML = '<div class="stats-loading">曲データがありません</div>';
+        return;
+      }
+
+      let totalImpressions = 0, totalDownloads = 0;
+      songs.forEach(s => {
+        const d = stats[s.id] || {};
+        totalImpressions += d.impressions || 0;
+        totalDownloads   += d.downloads   || 0;
+      });
+
+      const typeLbl = { 'one-of-a-kind': '一品物', regular: '通常', free: 'フリー' };
+      const rows = songs.map(s => {
+        const d   = stats[s.id] || {};
+        const imp = d.impressions || 0;
+        const dl  = d.downloads   || 0;
+        const rate = imp > 0 ? ((dl / imp) * 100).toFixed(1) + '%' : '—';
+        return `<tr>
+          <td><strong>${s.title}</strong><br><span style="font-size:12px;color:var(--muted)">${typeLbl[s.type] || s.type}</span></td>
+          <td><span class="stats-num">${imp.toLocaleString()}</span><div class="stats-num-label">インプレッション</div></td>
+          <td><span class="stats-num">${dl.toLocaleString()}</span><div class="stats-num-label">ダウンロード</div></td>
+          <td><span class="stats-num">${rate}</span><div class="stats-num-label">DL率</div></td>
+        </tr>`;
+      }).join('');
+
+      content.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;">
+          <div style="background:var(--accent-light);border-radius:10px;padding:20px;">
+            <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:6px;">合計インプレッション</div>
+            <div style="font-size:32px;font-weight:700;color:var(--accent)">${totalImpressions.toLocaleString()}</div>
+          </div>
+          <div style="background:#EDFAF3;border-radius:10px;padding:20px;">
+            <div style="font-size:12px;font-weight:700;color:#1A7A47;margin-bottom:6px;">合計ダウンロード</div>
+            <div style="font-size:32px;font-weight:700;color:#1A7A47">${totalDownloads.toLocaleString()}</div>
+          </div>
+        </div>
+        <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+          <table class="stats-table">
+            <thead><tr>
+              <th>曲名</th>
+              <th>インプレッション</th>
+              <th>ダウンロード</th>
+              <th>DL率</th>
+            </tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
+    } catch {
+      content.innerHTML = '<div class="stats-loading">⚠ 統計の取得に失敗しました。デプロイ環境で確認してください。</div>';
+    }
   }
 
   // ════════════════════════════════

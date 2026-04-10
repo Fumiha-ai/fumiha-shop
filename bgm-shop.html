@@ -1168,10 +1168,13 @@
           // クリック時：DLを止めてモーダルを表示、閉じたときにDL実行
           a.addEventListener('click', (e) => {
             e.preventDefault();
-            _pendingHref     = a.href;
-            _pendingFilename = a.getAttribute('download') || '';
+            _pendingHref           = a.href;
+            _pendingFilename       = a.getAttribute('download') || '';
+            _pendingDownloadSongId = a.id.replace('buy-', '');
             if (!showAdModal()) {
               // 広告なし → 即DL
+              trackEvent(_pendingDownloadSongId, 'download');
+              _pendingDownloadSongId = null;
               const dl = document.createElement('a');
               dl.href     = _pendingHref;
               dl.download = _pendingFilename;
@@ -1218,6 +1221,7 @@
   let _adCache = null;
   let _pendingHref = null;
   let _pendingFilename = null;
+  let _pendingDownloadSongId = null;
   const adModal      = document.getElementById('ad-modal');
   const adModalClose = document.getElementById('ad-modal-close');
 
@@ -1277,6 +1281,8 @@
     clearInterval(_skipTimer);
     adModal.classList.add('hidden');
     if (_pendingHref) {
+      trackEvent(_pendingDownloadSongId, 'download');
+      _pendingDownloadSongId = null;
       const a = document.createElement('a');
       a.href     = _pendingHref;
       a.download = _pendingFilename || '';
@@ -1310,6 +1316,55 @@
     }
   }
   initShop();
+
+  // ── 統計トラッキング ──
+  function trackEvent(songId, type) {
+    if (!songId) return;
+    fetch('/api/stats', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ events: [{ songId, type }] }),
+      keepalive: true,
+    }).catch(() => {});
+  }
+
+  // インプレッション：カードが画面の50%以上見えたとき1セッション1回だけ計上
+  (function setupImpressionTracking() {
+    const tracked = new Set(
+      JSON.parse(sessionStorage.getItem('fumiha_imp') || '[]')
+    );
+    let queue = [];
+    let timer = null;
+
+    function flush() {
+      if (!queue.length) return;
+      const events = queue.map(id => ({ songId: id, type: 'impression' }));
+      queue = [];
+      sessionStorage.setItem('fumiha_imp', JSON.stringify([...tracked]));
+      fetch('/api/stats', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ events }),
+        keepalive: true,
+      }).catch(() => {});
+    }
+
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const audio = entry.target.querySelector('audio');
+        if (!audio) return;
+        const songId = audio.id;
+        if (tracked.has(songId)) return;
+        tracked.add(songId);
+        queue.push(songId);
+        clearTimeout(timer);
+        timer = setTimeout(flush, 2000);
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.card').forEach(card => obs.observe(card));
+  })();
 </script>
 </body>
 </html>
