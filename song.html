@@ -716,18 +716,25 @@
     <!-- License section -->
     <div class="detail-section">
       <div class="section-title">ライセンス</div>
-      <div style="font-size:14px; color:var(--muted); line-height:1.9;">
-        ${song.type === 'free' ? `
-          <p><strong style="color:var(--text);">フリーライセンス</strong></p>
-          <p style="margin-top:6px;">無償で利用可能。個人・商用問わず、クレジット表記は任意で使用できます。</p>
-        ` : song.type === 'regular' ? `
-          <p><strong style="color:var(--text);">通常ライセンス</strong></p>
-          <p style="margin-top:6px;">有償。購入者は非独占的・非譲渡的な利用権を得ます。複数プロジェクトで使用可能です。</p>
-        ` : `
-          <p><strong style="color:var(--text);">限定1点ライセンス</strong></p>
-          <p style="margin-top:6px;">有償・独占販売。購入後は当該楽曲の販売を終了し、購入者のみが使用できます。</p>
-        `}
-      </div>
+      ${song.type === 'free' ? `
+        <div style="background:#F3FBF7; border:1.5px solid #9DE3BF; border-radius:12px; padding:20px 24px;">
+          <div style="font-size:11px; font-weight:700; background:#EDFAF3; color:#1A7A47; border-radius:999px; padding:2px 12px; display:inline-block; margin-bottom:12px;">フリー</div>
+          <div style="font-size:15px; font-weight:700; color:#1A1C2A; margin-bottom:8px;">フリーライセンス</div>
+          <div style="font-size:14px; color:#6B7080; line-height:1.8;">無償で利用可能。個人・商用問わず、クレジット表記は任意で使用できます。</div>
+        </div>
+      ` : song.type === 'regular' ? `
+        <div style="background:#F5F7FF; border:1.5px solid #C5CEFB; border-radius:12px; padding:20px 24px;">
+          <div style="font-size:11px; font-weight:700; background:#EEF1FE; color:#4A6CF7; border-radius:999px; padding:2px 12px; display:inline-block; margin-bottom:12px;">通常</div>
+          <div style="font-size:15px; font-weight:700; color:#1A1C2A; margin-bottom:8px;">通常ライセンス</div>
+          <div style="font-size:14px; color:#6B7080; line-height:1.8;">有償。購入者は非独占的・非譲渡的な利用権を得ます。複数プロジェクトで使用可能です。</div>
+        </div>
+      ` : `
+        <div style="background:#FFFAF4; border:1.5px solid #FFB74D; border-radius:12px; padding:20px 24px;">
+          <div style="font-size:11px; font-weight:700; background:#FFF3E0; color:#E65100; border-radius:999px; padding:2px 12px; display:inline-block; margin-bottom:12px;">限定1点</div>
+          <div style="font-size:15px; font-weight:700; color:#1A1C2A; margin-bottom:8px;">限定1点ライセンス</div>
+          <div style="font-size:14px; color:#6B7080; line-height:1.8;">有償・独占販売。購入後は当該楽曲の販売を終了し、購入者のみが使用できます。</div>
+        </div>
+      `}
     </div>`;
 
   /* ── 他の曲 ── */
