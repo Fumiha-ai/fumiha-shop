@@ -33,7 +33,7 @@ const SONGS = [
     jacketEmoji:    '☕',
     audio:          'audio/cozy-rain-cafe.mp3',
     licenses:       ['配信OK', '収益化OK', 'ループ'],
-    tags:           ['穏やか', '優しい', 'ヒーリング', 'アンビエント'],
+    tags:           ['穏やか', 'ヒーリング', 'アンビエント'],
   },
   {
     id:             'audio3',
@@ -89,7 +89,7 @@ const SONGS = [
     jacketEmoji:    '💼',
     audio:          'audio/clarity-pulse.mp3',
     licenses:       ['商用OK', '社内動画OK', '広告OK'],
-    tags:           ['お洒落', '冷静', '壮大', 'デジタル'],
+    tags:           ['お洒落', '壮大'],
   },
 
   // ↓ 新しい曲はここに追加 ↓
