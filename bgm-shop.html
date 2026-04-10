@@ -863,28 +863,16 @@
 </div>
 
 <!-- License accordion -->
-<div class="license-accordion">
+<div class="license-accordion" style="max-width:900px;">
   <button class="license-tab" onclick="toggleLicense(this)" aria-expanded="false">
     ライセンスについて
     <span class="license-tab-arrow">▼</span>
   </button>
   <div class="license-panel" hidden>
-    <div style="padding: 16px 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px;">
-      <div style="background:#F3FBF7; border:1.5px solid #9DE3BF; border-radius:10px; padding:14px 16px;">
-        <div style="font-size:10px; font-weight:700; background:#EDFAF3; color:#1A7A47; border-radius:999px; padding:2px 10px; display:inline-block; margin-bottom:8px;">フリー</div>
-        <div style="font-size:13px; font-weight:700; margin-bottom:6px;">フリーライセンス</div>
-        <div style="font-size:12px; color:var(--muted); line-height:1.6;">無償で利用可能。個人・商用問わず、クレジット表記なしで使用できます。</div>
-      </div>
-      <div style="background:#F5F7FF; border:1.5px solid #C5CEFB; border-radius:10px; padding:14px 16px;">
-        <div style="font-size:10px; font-weight:700; background:var(--accent-light); color:var(--accent); border-radius:999px; padding:2px 10px; display:inline-block; margin-bottom:8px;">通常</div>
-        <div style="font-size:13px; font-weight:700; margin-bottom:6px;">通常ライセンス</div>
-        <div style="font-size:12px; color:var(--muted); line-height:1.6;">有償。購入者は非独占的・非譲渡的な利用権を得ます。複数プロジェクトで使用可能です。</div>
-      </div>
-      <div style="background:#FFFAF4; border:1.5px solid #FFB74D; border-radius:10px; padding:14px 16px;">
-        <div style="font-size:10px; font-weight:700; background:#FFF3E0; color:#E65100; border-radius:999px; padding:2px 10px; display:inline-block; margin-bottom:8px;">限定一点</div>
-        <div style="font-size:13px; font-weight:700; margin-bottom:6px;">限定一点ライセンス</div>
-        <div style="font-size:12px; color:var(--muted); line-height:1.6;">有償・独占販売。購入後は当該楽曲の販売を終了し、購入者のみが使用できます。</div>
-      </div>
+    <div style="padding: 16px 20px; font-size:13px; color:var(--muted); line-height:1.9;">
+      <p><strong style="color:var(--text);">フリー</strong>　無償で利用可能。個人・商用問わず、クレジット表記なしで使用できます。</p>
+      <p style="margin-top:8px;"><strong style="color:var(--text);">通常</strong>　有償。購入者は非独占的・非譲渡的な利用権を得ます。複数プロジェクトで使用可能です。</p>
+      <p style="margin-top:8px;"><strong style="color:var(--text);">限定一点</strong>　有償・独占販売。購入後は当該楽曲の販売を終了し、購入者のみが使用できます。</p>
     </div>
   </div>
 </div>
