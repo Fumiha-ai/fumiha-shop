@@ -172,6 +172,8 @@
   .stats-num { font-size: 20px; font-weight: 700; color: var(--text); }
   .stats-num-label { font-size: 11px; color: var(--muted); }
   .stats-loading { text-align: center; padding: 48px; color: var(--muted); font-size: 14px; }
+  .stats-th-sort { cursor: pointer; user-select: none; white-space: nowrap; }
+  .stats-th-sort:hover { color: var(--accent); }
 
   @media(max-width: 640px) {
     header { padding: 14px 20px; }
@@ -459,6 +461,10 @@
   }
 
   // ── 統計タブ ──
+  // ソート状態（null = デフォルト順）
+  let _statsRows = [];
+  let _statsSort = { key: null, asc: true };
+
   async function loadStats() {
     const content = document.getElementById('stats-content');
     content.innerHTML = '<div class="stats-loading">読み込み中...</div>';
@@ -473,26 +479,18 @@
         return;
       }
 
-      let totalImpressions = 0, totalDownloads = 0;
-      songs.forEach(s => {
-        const d = stats[s.id] || {};
-        totalImpressions += d.impressions || 0;
-        totalDownloads   += d.downloads   || 0;
-      });
-
       const typeLbl = { 'one-of-a-kind': '一品物', regular: '通常', free: 'フリー' };
-      const rows = songs.map(s => {
+      let totalImpressions = 0, totalDownloads = 0;
+
+      _statsRows = songs.map(s => {
         const d   = stats[s.id] || {};
         const imp = d.impressions || 0;
         const dl  = d.downloads   || 0;
-        const rate = imp > 0 ? ((dl / imp) * 100).toFixed(1) + '%' : '—';
-        return `<tr>
-          <td><strong>${s.title}</strong><br><span style="font-size:12px;color:var(--muted)">${typeLbl[s.type] || s.type}</span></td>
-          <td><span class="stats-num">${imp.toLocaleString()}</span><div class="stats-num-label">インプレッション</div></td>
-          <td><span class="stats-num">${dl.toLocaleString()}</span><div class="stats-num-label">ダウンロード</div></td>
-          <td><span class="stats-num">${rate}</span><div class="stats-num-label">DL率</div></td>
-        </tr>`;
-      }).join('');
+        const rateNum = imp > 0 ? (dl / imp) * 100 : -1;
+        totalImpressions += imp;
+        totalDownloads   += dl;
+        return { title: s.title, type: typeLbl[s.type] || s.type, imp, dl, rateNum };
+      });
 
       content.innerHTML = `
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;">
@@ -506,19 +504,67 @@
           </div>
         </div>
         <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;">
-          <table class="stats-table">
+          <table class="stats-table" id="stats-table">
             <thead><tr>
               <th>曲名</th>
-              <th>インプレッション</th>
-              <th>ダウンロード</th>
-              <th>DL率</th>
+              <th class="stats-th-sort" onclick="sortStats('imp')"  id="sth-imp">インプレッション</th>
+              <th class="stats-th-sort" onclick="sortStats('dl')"   id="sth-dl">ダウンロード</th>
+              <th class="stats-th-sort" onclick="sortStats('rate')" id="sth-rate">DL率</th>
             </tr></thead>
-            <tbody>${rows}</tbody>
+            <tbody id="stats-tbody"></tbody>
           </table>
         </div>`;
+
+      renderStatsTable();
     } catch {
       content.innerHTML = '<div class="stats-loading">⚠ 統計の取得に失敗しました。デプロイ環境で確認してください。</div>';
     }
+  }
+
+  function sortStats(key) {
+    if (_statsSort.key === key) {
+      _statsSort.asc = !_statsSort.asc;
+    } else {
+      _statsSort.key = key;
+      _statsSort.asc = false; // 初回は降順
+    }
+    renderStatsTable();
+  }
+
+  function renderStatsTable() {
+    const tbody = document.getElementById('stats-tbody');
+    if (!tbody) return;
+
+    // ヘッダーの矢印を更新
+    ['imp','dl','rate'].forEach(k => {
+      const th = document.getElementById('sth-' + k);
+      if (!th) return;
+      const isActive = _statsSort.key === k;
+      const arrow = isActive ? (_statsSort.asc ? ' ▲' : ' ▼') : ' ⇅';
+      const labels = { imp: 'インプレッション', dl: 'ダウンロード', rate: 'DL率' };
+      th.textContent = labels[k] + arrow;
+      th.style.color = isActive ? 'var(--accent)' : '';
+    });
+
+    // ソート
+    const rows = [..._statsRows];
+    if (_statsSort.key) {
+      rows.sort((a, b) => {
+        const va = a[_statsSort.key === 'rate' ? 'rateNum' : _statsSort.key];
+        const vb = b[_statsSort.key === 'rate' ? 'rateNum' : _statsSort.key];
+        return _statsSort.asc ? va - vb : vb - va;
+      });
+    }
+
+    tbody.innerHTML = rows.map(r => {
+      const rateStr = r.rateNum >= 0 ? r.rateNum.toFixed(1) + '%' : '—';
+      return `<tr>
+        <td><strong>${r.title}</strong><br><span style="font-size:12px;color:var(--muted)">${r.type}</span></td>
+        <td><span class="stats-num">${r.imp.toLocaleString()}</span><div class="stats-num-label">インプレッション</div></td>
+        <td><span class="stats-num">${r.dl.toLocaleString()}</span><div class="stats-num-label">ダウンロード</div></td>
+        <td><span class="stats-num">${rateStr}</span><div class="stats-num-label">DL率</div></td>
+      </tr>`;
+    }).join('');
   }
 
   // ════════════════════════════════
