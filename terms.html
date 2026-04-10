@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>利用規約 — ふみはBGM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #4A6CF7;
+    --accent-light: #EEF1FE;
+    --bg: #F7F8FC;
+    --bg2: #FFFFFF;
+    --border: #E4E7F0;
+    --text: #1A1C2A;
+    --muted: #6B7080;
+    --radius: 14px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── Header ── */
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 60px 40px 0;
+    text-align: center;
+  }
+
+  .logo-badge {
+    display: inline-block;
+    background: var(--accent-light);
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
+  .logo-badge-inner {
+    padding: 5px 18px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  h1 {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: clamp(28px, 5vw, 52px);
+    line-height: 1.1;
+    color: var(--text);
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 520px;
+    margin: 0 auto 48px;
+  }
+
+  /* ── Back Link ── */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 32px;
+    padding: 8px 16px;
+    border: 1.5px solid var(--accent-light);
+    border-radius: 999px;
+    background: var(--accent-light);
+    transition: all 0.15s;
+  }
+  .back-link:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  /* ── Main Content ── */
+  .terms-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+  }
+
+  .terms-card {
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 48px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .terms-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--accent);
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+
+  /* ── Section ── */
+  .terms-section {
+    margin-bottom: 40px;
+  }
+  .terms-section:last-child {
+    margin-bottom: 0;
+  }
+
+  h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    padding-left: 14px;
+    border-left: 4px solid var(--accent);
+  }
+
+  p {
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  p:last-child { margin-bottom: 0; }
+
+  ul, ol {
+    padding-left: 20px;
+    margin-bottom: 10px;
+  }
+  li {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  /* ── OK/NG Table ── */
+  .ok-ng-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  @media (max-width: 600px) {
+    .ok-ng-grid { grid-template-columns: 1fr; }
+  }
+
+  .ok-box, .ng-box {
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .ok-box {
+    background: #F0FFF4;
+    border: 1.5px solid #6BCB77;
+  }
+  .ng-box {
+    background: #FFF5F5;
+    border: 1.5px solid #FF6B6B;
+  }
+
+  .ok-box .box-title {
+    color: #1E7E34;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ng-box .box-title {
+    color: #C0392B;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ok-box li { color: #2E7D32; }
+  .ng-box li { color: #C62828; }
+  .ok-box ul, .ng-box ul { margin-bottom: 0; }
+
+  /* ── License Types ── */
+  .license-types {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  @media (max-width: 600px) {
+    .license-types { grid-template-columns: 1fr; }
+  }
+
+  .lic-card {
+    border-radius: 10px;
+    padding: 18px 20px;
+    border: 1.5px solid var(--border);
+    background: var(--bg);
+  }
+  .lic-card-title {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .lic-card p {
+    margin-bottom: 0;
+    font-size: 13px;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 2px 10px;
+    margin-bottom: 8px;
+  }
+  .badge-blue { background: var(--accent-light); color: var(--accent); }
+  .badge-orange { background: #FFF3E0; color: #E65100; }
+  .badge-green { background: #F0FFF4; color: #1E7E34; }
+
+  /* ── Divider ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 36px 0;
+  }
+
+  /* ── Updated date ── */
+  .updated {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: right;
+    margin-bottom: 24px;
+  }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    header { padding: 40px 20px 0; }
+    .terms-container { padding: 0 16px 60px; }
+    .terms-card { padding: 28px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-badge"><div class="logo-badge-inner">ふみはBGM</div></div>
+  <h1>利用規約</h1>
+  <p class="subtitle">BGMをご利用いただく前に、必ずお読みください。</p>
+</header>
+
+<div class="terms-container">
+  <div style="text-align:center; margin-bottom: 32px;">
+    <a href="bgm-shop.html" class="back-link">← BGMショップへ戻る</a>
+  </div>
+
+  <div class="terms-card">
+    <p class="updated">最終更新：2025年1月1日</p>
+
+    <!-- 第1条 -->
+    <div class="terms-section">
+      <h2>第1条　総則</h2>
+      <p>本利用規約（以下「本規約」）は、ふみはBGM（以下「当サイト」）が提供する楽曲（以下「本楽曲」）の利用条件を定めるものです。本楽曲をダウンロード・使用した時点で、本規約に同意したものとみなします。</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 第2条 ライセンス種別 -->
+    <div class="terms-section">
+      <h2>第2条　ライセンス種別</h2>
+      <p>当サイトでは以下のライセンス形態で楽曲を提供しています。各楽曲の商品ページに記載のライセンスが適用されます。</p>
+      <div class="license-types">
+        <div class="lic-card">
+          <span class="badge badge-green">フリー</span>
+          <div class="lic-card-title">フリーライセンス</div>
+          <p>無償で利用可能。個人・商用問わず、クレジット表記なしで使用できます。</p>
+        </div>
+        <div class="lic-card">
+          <span class="badge badge-blue">通常</span>
+          <div class="lic-card-title">通常ライセンス</div>
+          <p>有償。購入者は非独占的・非譲渡的な利用権を得ます。複数プロジェクトで使用可能です。</p>
+        </div>
+        <div class="lic-card">
+          <span class="badge badge-orange">一品物</span>
+          <div class="lic-card-title">一品物ライセンス</div>
+          <p>有償・独占販売。購入後は当該楽曲の販売を終了し、購入者のみが使用できます。</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 第3条 許可・禁止事項 -->
+    <div class="terms-section">
+      <h2>第3条　許可・禁止事項</h2>
+      <p>本楽曲の利用に際して、以下のことを許可・禁止します。</p>
+      <div class="ok-ng-grid">
+        <div class="ok-box">
+          <div class="box-title">✓ 利用できること</div>
+          <ul>
+            <li>YouTube・ニコニコ動画等の動画コンテンツへの使用</li>
+            <li>ゲーム・アプリへの組み込み</li>
+            <li>ライブ配信・ストリーミングでの使用</li>
+            <li>ポッドキャスト・ラジオへの使用</li>
+            <li>広告・プロモーション動画への使用</li>
+            <li>店舗・イベントでのBGM使用</li>
+            <li>教育目的・非営利目的での使用</li>
+          </ul>
+        </div>
+        <div class="ng-box">
+          <div class="box-title">✗ 禁止されていること</div>
+          <ul>
+            <li>楽曲データそのものの再配布・転売</li>
+            <li>楽曲を主体とした音楽CDや音源集としての販売</li>
+            <li>楽曲の著作者を偽ること</li>
+            <li>音楽配信サービス（Spotify等）への登録・配信</li>
+            <li>ライセンスの他者への譲渡・サブライセンス</li>
+            <li>違法・反社会的なコンテンツへの使用</li>
+            <li>権利者の申告なき商標登録</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 第4条 クレジット表記 -->
+    <div class="terms-section">
+      <h2>第4条　クレジット表記</h2>
+      <p>フリーライセンスおよび有償ライセンスともに、クレジット表記は<strong>任意</strong>です。表記いただける場合は下記の形式を推奨します。</p>
+      <p style="background: var(--bg); border-radius: 8px; padding: 12px 16px; font-family: monospace; font-size: 13px; color: var(--text); border: 1px solid var(--border); margin-top: 10px;">
+        BGM：ふみはBGM (https://fumihaBGM.example.com)
+      </p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 第5条 著作権 -->
+    <div class="terms-section">
+      <h2>第5条　著作権</h2>
+      <p>本楽曲の著作権はふみはBGMに帰属します。本規約に基づくライセンスは、著作権そのものを譲渡するものではありません。</p>
+      <p>なお、本楽曲はSuno AIを使用して制作されています。AIによる生成物に関する権利については、利用当時のSuno AI利用規約および関連法令に従うものとします。</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 第6条 JASRAC・著作権管理団体 -->
+    <div class="terms-section">
+      <h2>第6条　著作権管理団体への登録</h2>
+      <p>当サイトの楽曲はJASRAC等の著作権管理団体への登録は行っていません。そのため、JASRACの管理楽曲使用許諾とは別に、当サイトのライセンスのみで使用可能です。</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 第7条 免責事項 -->
+    <div class="terms-section">
+      <h2>第7条　免責事項</h2>
+      <p>当サイトは、本楽曲の利用によって生じたいかなる損害（収益の損失、データの損失、その他の間接的損害を含む）についても、一切の責任を負いません。</p>
+      <p>本楽曲を使用した成果物に対するYouTubeのContent IDやその他プラットフォームの自動認識システムによる異議申し立てが発生した場合、当サイトは解決を保証しませんが、合理的な範囲で対応の協力を行います。</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 第8条 規約の変更 -->
+    <div class="terms-section">
+      <h2>第8条　規約の変更</h2>
+      <p>当サイトは、必要に応じて本規約を変更することがあります。変更後の規約はサイト上に掲載した時点で効力を生じます。変更後も本楽曲を継続して使用した場合、変更後の規約に同意したとみなします。</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 第9条 お問い合わせ -->
+    <div class="terms-section">
+      <h2>第9条　お問い合わせ</h2>
+      <p>本規約に関するご質問・ご不明な点は、フッターのメールアドレスまでお気軽にご連絡ください。</p>
+    </div>
+
+  </div><!-- /terms-card -->
+
+  <div style="text-align:center; margin-top: 32px;">
+    <a href="bgm-shop.html" class="back-link">← BGMショップへ戻る</a>
+  </div>
+</div><!-- /terms-container -->
+
+<footer>
+  <p>© 2025 ふみはBGM — All BGM produced with Suno AI</p>
+  <p style="margin-top:6px"><a href="terms.html" style="color:var(--accent)">利用規約</a></p>
+</footer>
+
+</body>
+</html>
