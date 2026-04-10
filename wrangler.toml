@@ -1,0 +1,10 @@
+name = "fumiha-shop"
+pages_build_output_dir = "."
+
+[[kv_namespaces]]
+binding = "PRODUCTS_KV"
+id = "1c8cfcb19e3047588206c4b4f3d3436c"
+
+[[kv_namespaces]]
+binding = "ADS_KV"
+id = "8d200bb9f0d444b59ae0a052538f7610"
