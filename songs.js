@@ -62,7 +62,7 @@ const SONGS = [
     description:    '「くつろぎトーク空間」は、心地よいリズムと静かなパワーが織りなすミステリアスな一曲です。リラックスしたい夜や集中したい時、またはダークファンタジーの世界に没頭したい瞬間にぴったりです。深く流れるような音楽が、あなたを幻想的な空間へと導いてくれます。',
     price:          0,
     duration:       '--:--',
-    jacket:         'images/くつろぎトーク空間',
+    jacket:         'images/くつろぎトーク空間.png',
     jacketGradient: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)',
     jacketEmoji:    '🎵',
     audio:          'audio/くつろぎトーク空間.mp3',
