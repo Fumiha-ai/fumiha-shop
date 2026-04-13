@@ -5,7 +5,7 @@ songs.jsを直接読み書きするデスクトップGUIツール
 """
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
-import os, re, subprocess
+import os, re, subprocess, sys
 
 # フォント設定（日本語ゴシック）
 FONT_FAMILY = 'Yu Gothic UI'
@@ -15,7 +15,11 @@ F_SMALL  = (FONT_FAMILY, 10)
 F_LARGE  = (FONT_FAMILY, 13, 'bold')
 F_TITLE  = (FONT_FAMILY, 14, 'bold')
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# PyInstallerでexe化した場合はexeのディレクトリ、通常実行はスクリプトのディレクトリ
+if getattr(sys, 'frozen', False):
+    SCRIPT_DIR = os.path.dirname(sys.executable)
+else:
+    SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SONGS_JS   = os.path.join(SCRIPT_DIR, 'songs.js')
 DEPLOY_BAT = os.path.join(SCRIPT_DIR, 'deploy.bat')
 DESC_DIR   = os.path.join(SCRIPT_DIR, 'description')
@@ -392,7 +396,7 @@ class App:
             except Exception as e:
                 messagebox.showerror('保存エラー', str(e))
                 return
-            subprocess.Popen(f'start cmd /k "{DEPLOY_BAT}"', shell=True, cwd=SCRIPT_DIR)
+            subprocess.Popen([DEPLOY_BAT], cwd=SCRIPT_DIR, creationflags=subprocess.CREATE_NO_WINDOW)
             self.status.set('🚀 deploy.batを起動しました')
 
 
