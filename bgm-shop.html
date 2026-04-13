@@ -840,6 +840,35 @@
     height: 56px;
     filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
   }
+
+  /* ── X (Twitter) シェアボタン ── */
+  .x-share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: #000;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Noto Sans JP', sans-serif;
+    text-decoration: none;
+    transition: opacity 0.15s, transform 0.15s;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .x-share-btn:hover { opacity: 0.75; transform: scale(1.04); }
+  .x-share-btn svg { flex-shrink: 0; }
+
+  /* サイト全体シェアエリア */
+  .site-share-row {
+    text-align: center;
+    margin-bottom: 24px;
+  }
 </style>
 </head>
 <body>
@@ -857,6 +886,12 @@
 <header>
   <h1><img src="/top-title.png" alt="ふみはBGM" style="max-width:800px;width:80%;height:auto;display:block;margin:0 auto 8px;"></h1>
   <p class="subtitle">Vtuber活動・配信・動画・ゲーム・ビジネスに使える<br>ロイヤリティフリーBGMです！</p>
+  <div class="site-share-row">
+    <a id="site-x-share" href="#" target="_blank" rel="noopener" class="x-share-btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.735-8.855L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      Xでシェア
+    </a>
+  </div>
 </header>
 
 <!-- Terms link -->
@@ -920,6 +955,23 @@
 
 <script src="songs.js"></script>
 <script>
+  // ── X シェアURL生成 ──
+  function encodeXShareUrl(title, songId) {
+    const pageUrl = location.origin + location.pathname.replace(/[^/]*$/, '') + 'song.html?id=' + songId;
+    const text = title + ' — ふみはBGM #ロイヤリティフリーBGM';
+    return 'https://x.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(pageUrl);
+  }
+
+  // サイト全体のシェアボタンURL設定
+  (function() {
+    const btn = document.getElementById('site-x-share');
+    if (btn) {
+      const text = 'ふみはBGM — Vtuber・配信・動画・ゲームに使えるロイヤリティフリーBGM！ #ふみはBGM #ロイヤリティフリーBGM';
+      const url  = location.origin + location.pathname;
+      btn.href = 'https://x.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
+    }
+  })();
+
   // YouTube URLからビデオIDを取得
   function getYouTubeId(url) {
     if (!url) return null;
@@ -1010,7 +1062,10 @@
         ${tagPills ? `<div class="card-tags">${tagPills}</div>` : ''}
         <div class="buy-row">
           <div class="price">${priceHtml}</div>
-          <div style="display:flex;gap:8px;align-items:center;">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <a href="${encodeXShareUrl(song.title, song.id)}" target="_blank" rel="noopener" class="x-share-btn" onclick="event.stopPropagation()">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.735-8.855L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
             <a href="song.html?id=${song.id}" class="detail-link">詳細</a>
             <button class="${buyClass}" id="${buyId}">${buyText}</button>
           </div>

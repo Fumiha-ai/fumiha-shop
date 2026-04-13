@@ -555,6 +555,32 @@
   }
   .jacket-yt-play:hover { background: rgba(0,0,0,0.35); }
   .jacket-yt-play svg { width: 72px; height: 72px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
+
+  /* ── X シェアボタン ── */
+  .x-share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    background: #000;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Noto Sans JP', sans-serif;
+    text-decoration: none;
+    transition: opacity 0.15s, transform 0.15s;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+  }
+  .x-share-btn:hover { opacity: 0.75; transform: scale(1.03); }
+  .song-share-row {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
 </style>
 </head>
 <body>
@@ -712,6 +738,14 @@
           <button class="${buyClass}" id="buy-btn" disabled>${buyText}</button>
         </div>
 
+        <!-- Share -->
+        <div class="song-share-row">
+          <a id="song-x-share" href="#" target="_blank" rel="noopener" class="x-share-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.735-8.855L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            Xでシェア
+          </a>
+        </div>
+
         <audio id="player" src="${song.audio}"></audio>
       </div>
     </div>
@@ -761,6 +795,14 @@
     section.innerHTML = `<div class="section-title" style="margin-bottom:18px">他の曲を見る</div>
       <div class="other-grid">${cards}</div>`;
     main.appendChild(section);
+  }
+
+  /* ── X シェアボタン URL設定 ── */
+  const xShareBtn = document.getElementById('song-x-share');
+  if (xShareBtn) {
+    const shareText = song.title + ' — ふみはBGM #ロイヤリティフリーBGM';
+    const shareUrl  = location.href;
+    xShareBtn.href = 'https://x.com/intent/tweet?text=' + encodeURIComponent(shareText) + '&url=' + encodeURIComponent(shareUrl);
   }
 
   /* ── Player logic ── */
