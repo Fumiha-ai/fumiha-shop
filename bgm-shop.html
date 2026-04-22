@@ -997,6 +997,19 @@
     if (e.key === 'Escape') closeYtModal();
   });
 
+  // ジャケット画像のフォールバック: .png → .jpg → .jpeg → .webp → 非表示
+  const JACKET_EXT_ORDER = ['.png', '.jpg', '.jpeg', '.webp'];
+  function tryNextJacket(el) {
+    const src = el.getAttribute('src') || '';
+    const m = src.match(/\.(png|jpe?g|webp)$/i);
+    if (!m) { el.style.display = 'none'; return; }
+    const cur = '.' + m[1].toLowerCase().replace('jpeg', 'jpeg');
+    const idx = JACKET_EXT_ORDER.indexOf(cur);
+    const next = JACKET_EXT_ORDER[idx + 1];
+    if (!next) { el.style.display = 'none'; return; }
+    el.src = src.replace(/\.[^.]+$/, next);
+  }
+
   // ── songs.jsからカードを生成 ──
   (function renderSongs() {
     const BADGE = {
@@ -1038,7 +1051,7 @@
           </div>`
         : `<a href="song.html?id=${song.id}" style="display:block;text-decoration:none;color:inherit;">
             <div class="card-jacket" style="--jacket-color:${song.jacketGradient}">
-              <img src="${song.jacket}" alt="${song.title}" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+              <img src="${song.jacket}" alt="${song.title}" onload="this.classList.add('loaded')" onerror="tryNextJacket(this)">
               <div class="jacket-placeholder">${song.jacketEmoji}</div>
             </div>
           </a>`;
